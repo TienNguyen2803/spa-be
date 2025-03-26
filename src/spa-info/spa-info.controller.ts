@@ -74,7 +74,7 @@ export class SpaInfoController {
     type: SpaInfo
   })
   findOne(@Param('id') id: string) {
-    return this.spaInfoService.findOne(+id);
+    return this.spaInfoService.findOne({ id: +id });
   }
 
   @Patch(':id')
@@ -97,6 +97,6 @@ export class SpaInfoController {
     description: 'Spa info has been successfully deleted.'
   })
   remove(@Param('id') id: string) {
-    return this.spaInfoService.remove(+id);
+    return this.spaInfoService.softDelete(+id);
   }
 }

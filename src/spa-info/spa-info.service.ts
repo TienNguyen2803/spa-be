@@ -21,13 +21,15 @@ export class SpaInfoService {
     );
   }
 
-  findManyWithPagination(
+  async findManyWithPagination(
     paginationOptions: IPaginationOptions,
-  ): Promise<SpaInfo[]> {
-    return this.spaInfoRepository.find({
+  ): Promise<StandardPaginationResultType<SpaInfo>> {
+    const data = await this.spaInfoRepository.find({
       skip: paginationOptions.offset,
       take: paginationOptions.limit,
     });
+    const total = await this.standardCount();
+    return { data, total };
   }
 
   standardCount(): Promise<number> {
