@@ -32,7 +32,11 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
         if (limit > 50) {
             limit = 50;
         }
-        return this.spaInfoService.findManyWithPagination({ page, limit, offset });
+        const data = await this.spaInfoService.findManyWithPagination({ page, limit, offset });
+        return {
+            data: data.data,
+            total: data.total
+        };
     }
     findOne(id) {
         return this.spaInfoService.findOne({ id: +id });
