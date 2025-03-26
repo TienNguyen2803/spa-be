@@ -36,6 +36,12 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
             offset: (page - 1) * limit,
         }), await this.spaInfoService.standardCount());
     }
+    findOne(id) {
+        return this.spaInfoService.findOne(id);
+    }
+    async remove(id) {
+        await this.spaInfoService.softDelete(id);
+    }
 };
 __decorate([
     (0, common_1.Post)(),
@@ -66,6 +72,33 @@ __decorate([
     __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
 ], SpaInfoController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: 'Get spa info by id' }),
+    (0, swagger_1.ApiResponse)({
+        status: common_1.HttpStatus.OK,
+        description: 'Get spa info by id',
+        type: spa_info_entity_1.SpaInfo,
+    }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], SpaInfoController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Delete)(':id'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
+    (0, swagger_1.ApiOperation)({ summary: 'Delete spa info' }),
+    (0, swagger_1.ApiResponse)({
+        status: common_1.HttpStatus.NO_CONTENT,
+        description: 'Spa info has been successfully deleted',
+    }),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], SpaInfoController.prototype, "remove", null);
 exports.SpaInfoController = SpaInfoController = __decorate([
     (0, swagger_1.ApiTags)('Spa Info'),
     (0, common_1.Controller)({

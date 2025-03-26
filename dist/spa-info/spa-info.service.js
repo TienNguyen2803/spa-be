@@ -36,6 +36,14 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
     standardCount() {
         return this.spaInfoRepository.count();
     }
+    findOne(id) {
+        return this.spaInfoRepository.findOneOrFail({
+            where: { id },
+        });
+    }
+    async softDelete(id) {
+        await this.spaInfoRepository.softDelete(id);
+    }
 };
 exports.SpaInfoService = SpaInfoService = __decorate([
     (0, common_1.Injectable)(),

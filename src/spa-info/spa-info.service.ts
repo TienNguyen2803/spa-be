@@ -34,7 +34,7 @@ export class SpaInfoService {
   }
 
   findOne(id: number): Promise<SpaInfo> {
-    return this.spaInfoRepository.findOne({
+    return this.spaInfoRepository.findOneOrFail({
       where: { id },
     });
   }

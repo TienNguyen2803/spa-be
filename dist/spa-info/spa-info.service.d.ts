@@ -8,4 +8,6 @@ export declare class SpaInfoService {
     create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo>;
     findManyWithPagination({ page, limit, offset }: IPaginationOptions): Promise<SpaInfo[]>;
     standardCount(): Promise<number>;
+    findOne(id: number): Promise<SpaInfo>;
+    softDelete(id: number): Promise<void>;
 }
