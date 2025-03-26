@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaInfoController = void 0;
 const common_1 = require("@nestjs/common");
@@ -33,7 +32,7 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
         if (limit > 50) {
             limit = 50;
         }
-        return this.spaInfoService.findAll({ page, limit, offset });
+        return this.spaInfoService.findManyWithPagination({ page, limit, offset });
     }
     findOne(id) {
         return this.spaInfoService.findOne(+id);
@@ -125,6 +124,6 @@ exports.SpaInfoController = SpaInfoController = __decorate([
         path: 'spa-info',
         version: '1',
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof spa_info_service_1.SpaInfoService !== "undefined" && spa_info_service_1.SpaInfoService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [spa_info_service_1.SpaInfoService])
 ], SpaInfoController);
 //# sourceMappingURL=spa-info.controller.js.map

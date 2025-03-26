@@ -8,7 +8,7 @@ export declare class SpaInfoController {
     constructor(spaInfoService: SpaInfoService);
     create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo>;
     findAll(page: number, limit: number, offset: number): Promise<StandardPaginationResultType<SpaInfo>>;
-    findOne(id: string): any;
-    update(id: string, updateSpaInfoDto: UpdateSpaInfoDto): any;
+    findOne(id: string): Promise<import("../utils/types/nullable.type").NullableType<SpaInfo>>;
+    update(id: string, updateSpaInfoDto: UpdateSpaInfoDto): Promise<SpaInfo>;
     remove(id: string): any;
 }

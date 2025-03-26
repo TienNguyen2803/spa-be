@@ -32,6 +32,7 @@ const home_module_1 = require("./home/home.module");
 const typeorm_2 = require("typeorm");
 const session_module_1 = require("./session/session.module");
 const mailer_module_1 = require("./mailer/mailer.module");
+const spa_info_module_1 = require("./spa-info/spa-info.module");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
@@ -86,6 +87,7 @@ exports.AppModule = AppModule = __decorate([
             mail_module_1.MailModule,
             mailer_module_1.MailerModule,
             home_module_1.HomeModule,
+            spa_info_module_1.SpaInfoModule,
         ],
     })
 ], AppModule);

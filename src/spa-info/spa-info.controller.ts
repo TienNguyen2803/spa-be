@@ -31,12 +31,12 @@ import { StandardPaginationResultType } from '../utils/types/standard-pagination
   version: '1',
 })
 export class SpaInfoController {
-  constructor(private readonly spaInfoService: SpaInfoService) {}
+  constructor(private readonly spaInfoService: SpaInfoService) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create new spa info' })
-  @ApiResponse({ 
+  @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Spa info has been successfully created.',
     type: SpaInfo
@@ -62,7 +62,7 @@ export class SpaInfoController {
       limit = 50;
     }
 
-    return this.spaInfoService.findAll({ page, limit, offset });
+    return this.spaInfoService.findManyWithPagination({ page, limit, offset });
   }
 
   @Get(':id')
