@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaInfoController = void 0;
+const standard_pagination_1 = require("../utils/standard-pagination");
 const common_1 = require("@nestjs/common");
 const spa_info_service_1 = require("./spa-info.service");
 const create_spa_info_dto_1 = require("./dto/create-spa-info.dto");
@@ -32,11 +33,11 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
         if (limit > 50) {
             limit = 50;
         }
-        const data = await this.spaInfoService.findManyWithPagination({ page, limit, offset });
-        return {
-            data: data.data,
-            total: data.total
-        };
+        return (0, standard_pagination_1.standardPagination)(await this.spaInfoService.findManyWithPagination({
+            page,
+            limit,
+            offset,
+        }), await this.spaInfoService.standardCount());
     }
     findOne(id) {
         return this.spaInfoService.findOne({ id: +id });

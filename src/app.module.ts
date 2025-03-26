@@ -21,7 +21,6 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { AllConfigType } from './config/config.type';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
-import { SpaInfoModule } from './spa-info/spa-info.module';
 
 @Module({
   imports: [
@@ -74,7 +73,6 @@ import { SpaInfoModule } from './spa-info/spa-info.module';
     MailModule,
     MailerModule,
     HomeModule,
-    SpaInfoModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }
