@@ -1,4 +1,7 @@
 
+import { standardPagination } from '../utils/standard-pagination';
+
+
 import {
   Controller,
   Get,
@@ -62,11 +65,14 @@ export class SpaInfoController {
       limit = 50;
     }
 
-    const data = await this.spaInfoService.findManyWithPagination({ page, limit, offset });
-    return {
-      data: data.data,
-      total: data.total
-    };
+    return standardPagination(
+      await this.spaInfoService.findManyWithPagination({
+        page,
+        limit,
+        offset,
+      }),
+      await this.spaInfoService.standardCount()
+    );
   }
 
   @Get(':id')
