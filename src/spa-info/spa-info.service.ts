@@ -7,13 +7,14 @@ import { DeepPartial, Repository } from 'typeorm';
 import { CreateSpaInfoDto } from './dto/create-spa-info.dto';
 import { SpaInfo } from './entities/spa-info.entity';
 import { NullableType } from '../utils/types/nullable.type';
+import { StandardPaginationResultType } from 'src/utils/types/standard-pagination-result.type';
 
 @Injectable()
 export class SpaInfoService {
   constructor(
     @InjectRepository(SpaInfo)
     private spaInfoRepository: Repository<SpaInfo>,
-  ) {}
+  ) { }
 
   create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo> {
     return this.spaInfoRepository.save(

@@ -35,13 +35,13 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
         return this.spaInfoService.findManyWithPagination({ page, limit, offset });
     }
     findOne(id) {
-        return this.spaInfoService.findOne(+id);
+        return this.spaInfoService.findOne({ id: +id });
     }
     update(id, updateSpaInfoDto) {
         return this.spaInfoService.update(+id, updateSpaInfoDto);
     }
     remove(id) {
-        return this.spaInfoService.remove(+id);
+        return this.spaInfoService.softDelete(+id);
     }
 };
 __decorate([

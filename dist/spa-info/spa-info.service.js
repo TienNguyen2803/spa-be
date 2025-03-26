@@ -24,11 +24,13 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
     create(createSpaInfoDto) {
         return this.spaInfoRepository.save(this.spaInfoRepository.create(createSpaInfoDto));
     }
-    findManyWithPagination(paginationOptions) {
-        return this.spaInfoRepository.find({
+    async findManyWithPagination(paginationOptions) {
+        const data = await this.spaInfoRepository.find({
             skip: paginationOptions.offset,
             take: paginationOptions.limit,
         });
+        const total = await this.standardCount();
+        return { data, total };
     }
     standardCount() {
         return this.spaInfoRepository.count();

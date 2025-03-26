@@ -10,5 +10,5 @@ export declare class SpaInfoController {
     findAll(page: number, limit: number, offset: number): Promise<StandardPaginationResultType<SpaInfo>>;
     findOne(id: string): Promise<import("../utils/types/nullable.type").NullableType<SpaInfo>>;
     update(id: string, updateSpaInfoDto: UpdateSpaInfoDto): Promise<SpaInfo>;
-    remove(id: string): any;
+    remove(id: string): Promise<void>;
 }
