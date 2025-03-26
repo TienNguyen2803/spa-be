@@ -14,15 +14,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../roles/roles.guard';
 import { SpaInfo } from './entities/spa-info.entity';
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Spa Info')
 @Controller({
   path: 'spa-info',
   version: '1',
 })
 export class SpaInfoController {
-  constructor(private readonly spaInfoService: SpaInfoService) {}
+  constructor(private readonly spaInfoService: SpaInfoService) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

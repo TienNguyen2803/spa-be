@@ -61,10 +61,6 @@ __decorate([
     __metadata("design:type", String)
 ], SpaInfo.prototype, "instagram_url", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Date)
-], SpaInfo.prototype, "updated_at", void 0);
-__decorate([
     (0, typeorm_1.OneToMany)(() => banner_entity_1.Banner, (banner) => banner.spaInfo),
     __metadata("design:type", Array)
 ], SpaInfo.prototype, "banners", void 0);

@@ -13,7 +13,6 @@ export declare class SpaInfo extends EntityHelper {
     seo_description: string;
     facebook_url: string;
     instagram_url: string;
-    updated_at: Date;
     banners: Banner[];
     workingHours: WorkingHour[];
 }

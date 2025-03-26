@@ -9,9 +9,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaInfoModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
-const spa_info_entity_1 = require("./entities/spa-info.entity");
-const spa_info_controller_1 = require("./spa-info.controller");
 const spa_info_service_1 = require("./spa-info.service");
+const spa_info_controller_1 = require("./spa-info.controller");
+const spa_info_entity_1 = require("./entities/spa-info.entity");
 let SpaInfoModule = exports.SpaInfoModule = class SpaInfoModule {
 };
 exports.SpaInfoModule = SpaInfoModule = __decorate([

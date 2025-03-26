@@ -22,6 +22,40 @@ class EntityHelper extends typeorm_1.BaseEntity {
 }
 exports.EntityHelper = EntityHelper;
 __decorate([
+    (0, typeorm_1.UpdateDateColumn)({
+        type: 'timestamp with time zone',
+        default: () => 'CURRENT_TIMESTAMP',
+        onUpdate: 'CURRENT_TIMESTAMP',
+    }),
+    __metadata("design:type", Date)
+], EntityHelper.prototype, "updated_at", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({
+        type: 'timestamp with time zone',
+        default: () => 'CURRENT_TIMESTAMP',
+        name: 'created_at',
+    }),
+    __metadata("design:type", Date)
+], EntityHelper.prototype, "created_at", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)({
+        type: 'timestamp with time zone',
+        nullable: true,
+        name: 'deleted_at',
+    }),
+    __metadata("design:type", Date)
+], EntityHelper.prototype, "deleted_at", void 0);
+__decorate([
+    (0, class_transformer_1.Exclude)(),
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], EntityHelper.prototype, "created_by", void 0);
+__decorate([
+    (0, class_transformer_1.Exclude)(),
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], EntityHelper.prototype, "updated_by", void 0);
+__decorate([
     (0, typeorm_1.AfterLoad)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),

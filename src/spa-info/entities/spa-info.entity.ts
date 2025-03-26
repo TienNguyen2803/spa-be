@@ -1,5 +1,5 @@
 
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityHelper } from '../../utils/entity-helper';
 import { Banner } from '../../banners/entities/banner.entity';
 import { WorkingHour } from '../../working-hours/entities/working-hour.entity';
@@ -38,13 +38,14 @@ export class SpaInfo extends EntityHelper {
 
   @Column()
   instagram_url: string;
+  
 
-  @Column()
-  updated_at: Date;
 
   @OneToMany(() => Banner, (banner) => banner.spaInfo)
   banners: Banner[];
 
   @OneToMany(() => WorkingHour, (workingHour) => workingHour.spaInfo)
   workingHours: WorkingHour[];
+
+ 
 }

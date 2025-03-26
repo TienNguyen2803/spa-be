@@ -21,6 +21,9 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { AllConfigType } from './config/config.type';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
+import { SpaInfoModule } from './spa-info/spa-info.module';
+import { ClsModule } from 'nestjs-cls';
+import { EntityHelperSubscriber } from './utils/subcribers/entity-helper.subscriber';
 
 @Module({
   imports: [
@@ -65,6 +68,11 @@ import { MailerModule } from './mailer/mailer.module';
       imports: [ConfigModule],
       inject: [ConfigService],
     }),
+    ClsModule.forRoot({
+      global: true,
+      middleware: { mount: true },
+    }),
+    EntityHelperSubscriber,
     UsersModule,
     AuthModule,
     AuthGoogleModule,

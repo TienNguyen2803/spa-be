@@ -17,58 +17,59 @@ class CreateSpaInfoDto {
 exports.CreateSpaInfoDto = CreateSpaInfoDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Spa Name' }),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "name", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'http://example.com/logo.png' }),
-    (0, class_validator_1.IsUrl)(),
-    (0, class_validator_1.IsOptional)(),
+    (0, swagger_1.ApiProperty)({ example: 'logo.jpg' }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "logo_url", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: '123 Spa Street' }),
+    (0, swagger_1.ApiProperty)({ example: '123 Main Street' }),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "address", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '+1234567890' }),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "phone", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'contact@spa.com' }),
-    (0, class_validator_1.IsEmail)(),
+    (0, swagger_1.ApiProperty)({ example: 'spa@example.com' }),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "email", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'Description of the spa' }),
+    (0, swagger_1.ApiProperty)({ example: 'Luxury spa services' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "description", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'SEO Title' }),
+    (0, swagger_1.ApiProperty)({ example: 'Best Spa Services' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "seo_title", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)({ example: 'SEO Description' }),
+    (0, swagger_1.ApiProperty)({ example: 'Luxury spa treatments and services' }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "seo_description", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'https://facebook.com/spa' }),
-    (0, class_validator_1.IsUrl)(),
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "facebook_url", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'https://instagram.com/spa' }),
-    (0, class_validator_1.IsUrl)(),
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "instagram_url", void 0);
 //# sourceMappingURL=create-spa-info.dto.js.map

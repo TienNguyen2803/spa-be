@@ -32,6 +32,9 @@ const home_module_1 = require("./home/home.module");
 const typeorm_2 = require("typeorm");
 const session_module_1 = require("./session/session.module");
 const mailer_module_1 = require("./mailer/mailer.module");
+const spa_info_module_1 = require("./spa-info/spa-info.module");
+const nestjs_cls_1 = require("nestjs-cls");
+const entity_helper_subscriber_1 = require("./utils/subcribers/entity-helper.subscriber");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
@@ -78,6 +81,11 @@ exports.AppModule = AppModule = __decorate([
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
             }),
+            nestjs_cls_1.ClsModule.forRoot({
+                global: true,
+                middleware: { mount: true },
+            }),
+            entity_helper_subscriber_1.EntityHelperSubscriber,
             users_module_1.UsersModule,
             auth_module_1.AuthModule,
             auth_google_module_1.AuthGoogleModule,
@@ -86,6 +94,7 @@ exports.AppModule = AppModule = __decorate([
             mail_module_1.MailModule,
             mailer_module_1.MailerModule,
             home_module_1.HomeModule,
+            spa_info_module_1.SpaInfoModule,
         ],
     })
 ], AppModule);

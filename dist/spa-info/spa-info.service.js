@@ -24,28 +24,6 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
     create(createSpaInfoDto) {
         return this.spaInfoRepository.save(this.spaInfoRepository.create(createSpaInfoDto));
     }
-    async findManyWithPagination(paginationOptions) {
-        const data = await this.spaInfoRepository.find({
-            skip: paginationOptions.offset,
-            take: paginationOptions.limit,
-        });
-        const total = await this.standardCount();
-        return { data, total };
-    }
-    standardCount() {
-        return this.spaInfoRepository.count();
-    }
-    findOne(fields) {
-        return this.spaInfoRepository.findOne({
-            where: fields,
-        });
-    }
-    update(id, payload) {
-        return this.spaInfoRepository.save(this.spaInfoRepository.create(Object.assign({ id }, payload)));
-    }
-    async softDelete(id) {
-        await this.spaInfoRepository.softDelete(id);
-    }
 };
 exports.SpaInfoService = SpaInfoService = __decorate([
     (0, common_1.Injectable)(),
