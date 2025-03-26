@@ -62,7 +62,11 @@ export class SpaInfoController {
       limit = 50;
     }
 
-    return this.spaInfoService.findManyWithPagination({ page, limit, offset });
+    const data = await this.spaInfoService.findManyWithPagination({ page, limit, offset });
+    return {
+      data: data.data,
+      total: data.total
+    };
   }
 
   @Get(':id')
