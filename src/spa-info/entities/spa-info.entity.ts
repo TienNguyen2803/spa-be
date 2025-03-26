@@ -48,36 +48,3 @@ export class SpaInfo extends EntityHelper {
   @OneToMany(() => WorkingHour, (workingHour) => workingHour.spaInfo)
   workingHours: WorkingHour[];
 }
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
-
-@Entity()
-export class SpaInfo {
-  @ApiProperty()
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ApiProperty()
-  @Column()
-  name: string;
-
-  @ApiProperty()
-  @Column({ nullable: true })
-  description: string;
-
-  @ApiProperty()
-  @Column({ nullable: true })
-  address: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-}
