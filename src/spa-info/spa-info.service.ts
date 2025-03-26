@@ -17,4 +17,18 @@ export class SpaInfoService {
       this.spaInfoRepository.create(createSpaInfoDto),
     );
   }
+
+  findManyWithPagination({ page, limit, offset }: IPaginationOptions) {
+    return this.spaInfoRepository.find({
+      skip: offset,
+      take: limit,
+      order: {
+        id: 'DESC',
+      },
+    });
+  }
+
+  standardCount(): Promise<number> {
+    return this.spaInfoRepository.count();
+  }
 }
