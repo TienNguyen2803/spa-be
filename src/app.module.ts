@@ -17,6 +17,7 @@ import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { ForgotModule } from './forgot/forgot.module';
 import { MailModule } from './mail/mail.module';
 import { HomeModule } from './home/home.module';
+import { SpaInfoModule } from './spa-info/spa-info.module';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { AllConfigType } from './config/config.type';
 import { SessionModule } from './session/session.module';
@@ -73,6 +74,7 @@ import { MailerModule } from './mailer/mailer.module';
     MailModule,
     MailerModule,
     HomeModule,
+    SpaInfoModule,
   ],
 })
 export class AppModule { }
