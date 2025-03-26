@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaInfoController = void 0;
 const common_1 = require("@nestjs/common");
+const standard_pagination_1 = require("../utils/standard-pagination");
 const spa_info_service_1 = require("./spa-info.service");
 const create_spa_info_dto_1 = require("./dto/create-spa-info.dto");
 const swagger_1 = require("@nestjs/swagger");
@@ -24,6 +25,16 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
     }
     create(createSpaInfoDto) {
         return this.spaInfoService.create(createSpaInfoDto);
+    }
+    async findAll(page, limit) {
+        if (limit > 50) {
+            limit = 50;
+        }
+        return (0, standard_pagination_1.standardPagination)(await this.spaInfoService.findManyWithPagination({
+            page,
+            limit,
+            offset: (page - 1) * limit,
+        }), await this.spaInfoService.standardCount());
     }
 };
 __decorate([
@@ -40,6 +51,21 @@ __decorate([
     __metadata("design:paramtypes", [create_spa_info_dto_1.CreateSpaInfoDto]),
     __metadata("design:returntype", Promise)
 ], SpaInfoController.prototype, "create", null);
+__decorate([
+    (0, common_1.Get)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiOperation)({ summary: 'Get all spa info with pagination' }),
+    (0, swagger_1.ApiResponse)({
+        status: common_1.HttpStatus.OK,
+        description: 'Get spa info list',
+        type: [spa_info_entity_1.SpaInfo],
+    }),
+    __param(0, (0, common_1.Query)('page', new common_1.DefaultValuePipe(1), common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Query)('limit', new common_1.DefaultValuePipe(10), common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
+], SpaInfoController.prototype, "findAll", null);
 exports.SpaInfoController = SpaInfoController = __decorate([
     (0, swagger_1.ApiTags)('Spa Info'),
     (0, common_1.Controller)({

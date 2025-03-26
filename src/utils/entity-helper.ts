@@ -2,6 +2,7 @@ import { Exclude, instanceToPlain } from 'class-transformer';
 import { AfterLoad, BaseEntity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 export class EntityHelper extends BaseEntity {
+  @Exclude()
   __entity?: string;
 
   @UpdateDateColumn({

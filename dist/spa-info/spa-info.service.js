@@ -24,6 +24,18 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
     create(createSpaInfoDto) {
         return this.spaInfoRepository.save(this.spaInfoRepository.create(createSpaInfoDto));
     }
+    findManyWithPagination({ page, limit, offset }) {
+        return this.spaInfoRepository.find({
+            skip: offset,
+            take: limit,
+            order: {
+                id: 'DESC',
+            },
+        });
+    }
+    standardCount() {
+        return this.spaInfoRepository.count();
+    }
 };
 exports.SpaInfoService = SpaInfoService = __decorate([
     (0, common_1.Injectable)(),

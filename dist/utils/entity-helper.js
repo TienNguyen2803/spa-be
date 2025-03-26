@@ -22,6 +22,10 @@ class EntityHelper extends typeorm_1.BaseEntity {
 }
 exports.EntityHelper = EntityHelper;
 __decorate([
+    (0, class_transformer_1.Exclude)(),
+    __metadata("design:type", String)
+], EntityHelper.prototype, "__entity", void 0);
+__decorate([
     (0, typeorm_1.UpdateDateColumn)({
         type: 'timestamp with time zone',
         default: () => 'CURRENT_TIMESTAMP',
