@@ -32,4 +32,14 @@ export class SpaInfoService {
   standardCount(): Promise<number> {
     return this.spaInfoRepository.count();
   }
+
+  findOne(id: number): Promise<SpaInfo> {
+    return this.spaInfoRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async softDelete(id: number): Promise<void> {
+    await this.spaInfoRepository.softDelete(id);
+  }
 }

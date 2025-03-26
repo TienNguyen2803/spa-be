@@ -10,6 +10,8 @@ import {
   HttpCode,
   DefaultValuePipe,
   ParseIntPipe,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { standardPagination } from '../utils/standard-pagination';
 import { IPaginationOptions } from '../utils/types/pagination-options';
@@ -66,5 +68,28 @@ export class SpaInfoController {
       }),
       await this.spaInfoService.standardCount(),
     );
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get spa info by id' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Get spa info by id',
+    type: SpaInfo,
+  })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.spaInfoService.findOne(id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete spa info' })
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: 'Spa info has been successfully deleted',
+  })
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    await this.spaInfoService.softDelete(id);
   }
 }
