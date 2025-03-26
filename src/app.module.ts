@@ -73,6 +73,7 @@ import { MailerModule } from './mailer/mailer.module';
     MailModule,
     MailerModule,
     HomeModule,
+    SpaInfoModule,
   ],
 })
 export class AppModule { }
