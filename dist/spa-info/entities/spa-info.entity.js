@@ -61,11 +61,17 @@ __decorate([
     __metadata("design:type", String)
 ], SpaInfo.prototype, "instagram_url", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => banner_entity_1.Banner, (banner) => banner.spaInfo),
+    (0, typeorm_1.OneToMany)(() => banner_entity_1.Banner, (banner) => banner.spaInfo, {
+        cascade: true,
+        eager: true
+    }),
     __metadata("design:type", Array)
 ], SpaInfo.prototype, "banners", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => working_hour_entity_1.WorkingHour, (workingHour) => workingHour.spaInfo),
+    (0, typeorm_1.OneToMany)(() => working_hour_entity_1.WorkingHour, (workingHour) => workingHour.spaInfo, {
+        cascade: true,
+        eager: true
+    }),
     __metadata("design:type", Array)
 ], SpaInfo.prototype, "workingHours", void 0);
 exports.SpaInfo = SpaInfo = __decorate([

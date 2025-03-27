@@ -40,11 +40,13 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Banner.prototype, "is_active", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', default: 0 }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Banner.prototype, "type", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => spa_info_entity_1.SpaInfo, (spaInfo) => spaInfo.banners),
+    (0, typeorm_1.ManyToOne)(() => spa_info_entity_1.SpaInfo, (spaInfo) => spaInfo.banners, {
+        onDelete: 'CASCADE'
+    }),
     __metadata("design:type", spa_info_entity_1.SpaInfo)
 ], Banner.prototype, "spaInfo", void 0);
 __decorate([

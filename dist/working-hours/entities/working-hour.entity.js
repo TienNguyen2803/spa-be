@@ -24,19 +24,21 @@ __decorate([
     __metadata("design:type", String)
 ], WorkingHour.prototype, "day_of_week", void 0);
 __decorate([
-    (0, typeorm_1.Column)('time'),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], WorkingHour.prototype, "opening_time", void 0);
 __decorate([
-    (0, typeorm_1.Column)('time'),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], WorkingHour.prototype, "closing_time", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)({ default: false }),
     __metadata("design:type", Boolean)
 ], WorkingHour.prototype, "is_closed", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => spa_info_entity_1.SpaInfo, (spaInfo) => spaInfo.workingHours),
+    (0, typeorm_1.ManyToOne)(() => spa_info_entity_1.SpaInfo, (spaInfo) => spaInfo.workingHours, {
+        onDelete: 'CASCADE'
+    }),
     __metadata("design:type", spa_info_entity_1.SpaInfo)
 ], WorkingHour.prototype, "spaInfo", void 0);
 __decorate([
