@@ -15,34 +15,19 @@ export class SpaInfoService {
   async create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo> {
     const { banners, workingHours, ...spaInfoData } = createSpaInfoDto;
 
-    // Create spa info
-    const spaInfo = await this.spaInfoRepository.save(
-      this.spaInfoRepository.create(spaInfoData),
-    );
+    // Create spa info with relations
+    const spaInfo = this.spaInfoRepository.create({
+      ...spaInfoData,
+      banners: banners?.map(banner => ({
+        ...banner,
+      })),
+      workingHours: workingHours?.map(wh => ({
+        ...wh,
+      })),
+    });
 
-    // Create banners if provided
-    if (banners?.length) {
-      await this.spaInfoRepository
-        .createQueryBuilder()
-        .relation(SpaInfo, 'banners')
-        .of(spaInfo)
-        .add(banners.map(banner => ({
-          ...banner,
-          spa_info_id: spaInfo.id
-        })));
-    }
-
-    // Create working hours if provided
-    if (workingHours?.length) {
-      await this.spaInfoRepository
-        .createQueryBuilder()
-        .relation(SpaInfo, 'workingHours')
-        .of(spaInfo)
-        .add(workingHours.map(wh => ({
-          ...wh,
-          spa_info_id: spaInfo.id
-        })));
-    }
+    // Save everything in one transaction
+    await this.spaInfoRepository.save(spaInfo);
 
     return this.spaInfoRepository.findOneOrFail({
       where: { id: spaInfo.id },
