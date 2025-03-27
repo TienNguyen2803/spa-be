@@ -16,23 +16,39 @@ export class SpaInfoService {
     const { banners, workingHours, ...spaInfoData } = createSpaInfoDto;
 
     // Create spa info with relations
-    const spaInfo = this.spaInfoRepository.create({
+    const spaInfo = await this.spaInfoRepository.save({
       ...spaInfoData,
-      banners: banners?.map(banner => ({
-        image_url: banner.image_url,
-        title: banner.title,
-        subtitle: banner.subtitle,
-        order: banner.order,
-        is_active: banner.is_active,
-        type: banner.type
-      })),
-      workingHours: workingHours?.map(wh => ({
-        day_of_week: wh.day,
-        opening_time: wh.open_time,
-        closing_time: wh.close_time,
-        is_closed: false
-      })),
     });
+
+    if (banners?.length) {
+      spaInfo.banners = await Promise.all(
+        banners.map(banner =>
+          this.spaInfoRepository.manager.save('Banner', {
+            image_url: banner.image_url,
+            title: banner.title,
+            subtitle: banner.subtitle,
+            order: banner.order,
+            is_active: banner.is_active,
+            type: banner.type,
+            spa_info_id: spaInfo.id
+          })
+        )
+      );
+    }
+
+    if (workingHours?.length) {
+      spaInfo.workingHours = await Promise.all(
+        workingHours.map(wh =>
+          this.spaInfoRepository.manager.save('WorkingHour', {
+            day_of_week: wh.day,
+            opening_time: wh.open_time,
+            closing_time: wh.close_time,
+            is_closed: false,
+            spa_info_id: spaInfo.id
+          })
+        )
+      );
+    }
 
     // Save everything in one transaction
     await this.spaInfoRepository.save(spaInfo);
