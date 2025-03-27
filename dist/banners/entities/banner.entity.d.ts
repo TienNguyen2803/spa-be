@@ -7,6 +7,7 @@ export declare class Banner extends EntityHelper {
     subtitle: string;
     order: number;
     is_active: boolean;
+    type: number;
     spaInfo: SpaInfo;
     spa_info_id: number;
 }

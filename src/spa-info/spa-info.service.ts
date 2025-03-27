@@ -15,7 +15,7 @@ export class SpaInfoService {
 
   async create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo> {
     const { banners, workingHours, ...spaInfoData } = createSpaInfoDto;
-    
+
     // Create spa info
     const spaInfo = await this.spaInfoRepository.save(
       this.spaInfoRepository.create(spaInfoData),
@@ -45,7 +45,7 @@ export class SpaInfoService {
         })));
     }
 
-    return this.spaInfoRepository.findOne({
+    return this.spaInfoRepository.findOneOrFail({
       where: { id: spaInfo.id },
       relations: ['banners', 'workingHours']
     });
