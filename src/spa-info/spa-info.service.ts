@@ -13,10 +13,42 @@ export class SpaInfoService {
     private spaInfoRepository: Repository<SpaInfo>,
   ) { }
 
-  create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo> {
-    return this.spaInfoRepository.save(
-      this.spaInfoRepository.create(createSpaInfoDto),
+  async create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo> {
+    const { banners, workingHours, ...spaInfoData } = createSpaInfoDto;
+    
+    // Create spa info
+    const spaInfo = await this.spaInfoRepository.save(
+      this.spaInfoRepository.create(spaInfoData),
     );
+
+    // Create banners if provided
+    if (banners?.length) {
+      await this.spaInfoRepository
+        .createQueryBuilder()
+        .relation(SpaInfo, 'banners')
+        .of(spaInfo)
+        .add(banners.map(banner => ({
+          ...banner,
+          spa_info_id: spaInfo.id
+        })));
+    }
+
+    // Create working hours if provided
+    if (workingHours?.length) {
+      await this.spaInfoRepository
+        .createQueryBuilder()
+        .relation(SpaInfo, 'workingHours')
+        .of(spaInfo)
+        .add(workingHours.map(wh => ({
+          ...wh,
+          spa_info_id: spaInfo.id
+        })));
+    }
+
+    return this.spaInfoRepository.findOne({
+      where: { id: spaInfo.id },
+      relations: ['banners', 'workingHours']
+    });
   }
 
   findManyWithPagination({ page, limit, offset }: IPaginationOptions) {

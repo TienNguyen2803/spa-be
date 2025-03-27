@@ -23,6 +23,9 @@ export class Banner extends EntityHelper {
   @Column()
   is_active: boolean;
 
+  @Column({ type: 'int', default: 0 })
+  type: number; // 0 - home, 1 - about, 2 - contact
+
   @ManyToOne(() => SpaInfo, (spaInfo) => spaInfo.banners)
   spaInfo: SpaInfo;
 
