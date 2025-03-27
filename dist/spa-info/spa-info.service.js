@@ -34,19 +34,27 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
     }
     async create(createSpaInfoDto) {
         const { banners, workingHours } = createSpaInfoDto, spaInfoData = __rest(createSpaInfoDto, ["banners", "workingHours"]);
-        const spaInfo = this.spaInfoRepository.create(Object.assign(Object.assign({}, spaInfoData), { banners: banners === null || banners === void 0 ? void 0 : banners.map(banner => ({
+        const spaInfo = await this.spaInfoRepository.save(Object.assign({}, spaInfoData));
+        if (banners === null || banners === void 0 ? void 0 : banners.length) {
+            spaInfo.banners = await Promise.all(banners.map(banner => this.spaInfoRepository.manager.save('Banner', {
                 image_url: banner.image_url,
                 title: banner.title,
                 subtitle: banner.subtitle,
                 order: banner.order,
                 is_active: banner.is_active,
-                type: banner.type
-            })), workingHours: workingHours === null || workingHours === void 0 ? void 0 : workingHours.map(wh => ({
+                type: banner.type,
+                spa_info_id: spaInfo.id
+            })));
+        }
+        if (workingHours === null || workingHours === void 0 ? void 0 : workingHours.length) {
+            spaInfo.workingHours = await Promise.all(workingHours.map(wh => this.spaInfoRepository.manager.save('WorkingHour', {
                 day_of_week: wh.day,
                 opening_time: wh.open_time,
                 closing_time: wh.close_time,
-                is_closed: false
-            })) }));
+                is_closed: false,
+                spa_info_id: spaInfo.id
+            })));
+        }
         await this.spaInfoRepository.save(spaInfo);
         return this.spaInfoRepository.findOneOrFail({
             where: { id: spaInfo.id },
