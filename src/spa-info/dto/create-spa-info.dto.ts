@@ -1,6 +1,6 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEmail, IsArray, ValidateNested, IsOptional } from 'class-validator';
+import { IsString, IsEmail, IsArray, ValidateNested, IsOptional, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class CreateBannerDto {
@@ -17,12 +17,15 @@ class CreateBannerDto {
   subtitle: string;
 
   @ApiProperty({ example: 1 })
+  @IsOptional()
   order: number;
 
   @ApiProperty({ example: true })
+  @IsOptional()
   is_active: boolean;
 
   @ApiProperty({ example: 0, description: '0 - home, 1 - about, 2 - contact' })
+  @IsOptional()
   type: number;
 }
 

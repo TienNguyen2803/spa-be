@@ -41,13 +41,11 @@ export class SpaInfo extends EntityHelper {
 
   @OneToMany(() => Banner, (banner) => banner.spa_info, {
     cascade: true,
-    eager: true
   })
   banners: Banner[];
 
   @OneToMany(() => WorkingHour, (workingHour) => workingHour.spa_info, {
     cascade: true,
-    eager: true
   })
   workingHours: WorkingHour[];
 }

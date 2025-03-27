@@ -18,13 +18,13 @@ export class SpaInfoService {
     // Create spa info with relations
     const spaInfo = this.spaInfoRepository.create({
       ...spaInfoData,
-      banners: banners?.map(banner => this.spaInfoRepository.manager.create('Banner', {
+      banners: banners?.map(banner => ({
         image_url: banner.image_url,
         title: banner.title,
         subtitle: banner.subtitle,
-        order: banner.order || 0,
-        is_active: banner.is_active || true,
-        type: banner.type || 0
+        order: banner.order,
+        is_active: banner.is_active,
+        type: banner.type
       })),
       workingHours: workingHours?.map(wh => ({
         day_of_week: wh.day,

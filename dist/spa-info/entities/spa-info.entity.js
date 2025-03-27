@@ -63,14 +63,12 @@ __decorate([
 __decorate([
     (0, typeorm_1.OneToMany)(() => banner_entity_1.Banner, (banner) => banner.spa_info, {
         cascade: true,
-        eager: true
     }),
     __metadata("design:type", Array)
 ], SpaInfo.prototype, "banners", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => working_hour_entity_1.WorkingHour, (workingHour) => workingHour.spa_info, {
         cascade: true,
-        eager: true
     }),
     __metadata("design:type", Array)
 ], SpaInfo.prototype, "workingHours", void 0);

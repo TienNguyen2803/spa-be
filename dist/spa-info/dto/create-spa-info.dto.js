@@ -32,14 +32,17 @@ __decorate([
 ], CreateBannerDto.prototype, "subtitle", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 1 }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], CreateBannerDto.prototype, "order", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: true }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Boolean)
 ], CreateBannerDto.prototype, "is_active", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 0, description: '0 - home, 1 - about, 2 - contact' }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], CreateBannerDto.prototype, "type", void 0);
 class CreateWorkingHourDto {
