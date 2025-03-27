@@ -61,6 +61,7 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
             order: {
                 id: 'DESC',
             },
+            relations: ['banners', 'workingHours'],
         });
     }
     standardCount() {
@@ -69,6 +70,7 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
     findOne(id) {
         return this.spaInfoRepository.findOneOrFail({
             where: { id },
+            relations: ['banners', 'workingHours'],
         });
     }
     async softDelete(id) {
