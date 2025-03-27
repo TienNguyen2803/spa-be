@@ -39,13 +39,13 @@ export class SpaInfo extends EntityHelper {
   @Column()
   instagram_url: string;
 
-  @OneToMany(() => Banner, (banner) => banner.spaInfo, {
+  @OneToMany(() => Banner, (banner) => banner.spa_info, {
     cascade: true,
     eager: true
   })
   banners: Banner[];
 
-  @OneToMany(() => WorkingHour, (workingHour) => workingHour.spaInfo, {
+  @OneToMany(() => WorkingHour, (workingHour) => workingHour.spa_info, {
     cascade: true,
     eager: true
   })

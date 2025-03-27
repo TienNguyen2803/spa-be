@@ -1,5 +1,5 @@
 
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityHelper } from '../../utils/entity-helper';
 import { SpaInfo } from '../../spa-info/entities/spa-info.entity';
 
@@ -29,7 +29,8 @@ export class Banner extends EntityHelper {
   @ManyToOne(() => SpaInfo, (spaInfo) => spaInfo.banners, {
     onDelete: 'CASCADE'
   })
-  spaInfo: SpaInfo;
+  @JoinColumn({ name: 'spa_info_id' })
+  spa_info: SpaInfo;
 
   @Column()
   spa_info_id: number;

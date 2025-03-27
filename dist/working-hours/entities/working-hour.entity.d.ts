@@ -6,6 +6,6 @@ export declare class WorkingHour extends EntityHelper {
     opening_time: string;
     closing_time: string;
     is_closed: boolean;
-    spaInfo: SpaInfo;
+    spa_info: SpaInfo;
     spa_info_id: number;
 }

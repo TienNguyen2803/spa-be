@@ -8,6 +8,6 @@ export declare class Banner extends EntityHelper {
     order: number;
     is_active: boolean;
     type: number;
-    spaInfo: SpaInfo;
+    spa_info: SpaInfo;
     spa_info_id: number;
 }
