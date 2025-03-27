@@ -34,21 +34,8 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
     }
     async create(createSpaInfoDto) {
         const { banners, workingHours } = createSpaInfoDto, spaInfoData = __rest(createSpaInfoDto, ["banners", "workingHours"]);
-        const spaInfo = await this.spaInfoRepository.save(this.spaInfoRepository.create(spaInfoData));
-        if (banners === null || banners === void 0 ? void 0 : banners.length) {
-            await this.spaInfoRepository
-                .createQueryBuilder()
-                .relation(spa_info_entity_1.SpaInfo, 'banners')
-                .of(spaInfo)
-                .add(banners.map(banner => (Object.assign(Object.assign({}, banner), { spa_info_id: spaInfo.id }))));
-        }
-        if (workingHours === null || workingHours === void 0 ? void 0 : workingHours.length) {
-            await this.spaInfoRepository
-                .createQueryBuilder()
-                .relation(spa_info_entity_1.SpaInfo, 'workingHours')
-                .of(spaInfo)
-                .add(workingHours.map(wh => (Object.assign(Object.assign({}, wh), { spa_info_id: spaInfo.id }))));
-        }
+        const spaInfo = this.spaInfoRepository.create(Object.assign(Object.assign({}, spaInfoData), { banners: banners === null || banners === void 0 ? void 0 : banners.map(banner => (Object.assign({}, banner))), workingHours: workingHours === null || workingHours === void 0 ? void 0 : workingHours.map(wh => (Object.assign({}, wh))) }));
+        await this.spaInfoRepository.save(spaInfo);
         return this.spaInfoRepository.findOneOrFail({
             where: { id: spaInfo.id },
             relations: ['banners', 'workingHours']
