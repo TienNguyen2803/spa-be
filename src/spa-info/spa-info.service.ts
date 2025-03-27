@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
@@ -58,6 +57,7 @@ export class SpaInfoService {
       order: {
         id: 'DESC',
       },
+      relations: ['banners', 'workingHours'],
     });
   }
 
@@ -68,6 +68,7 @@ export class SpaInfoService {
   findOne(id: number): Promise<SpaInfo> {
     return this.spaInfoRepository.findOneOrFail({
       where: { id },
+      relations: ['banners', 'workingHours'],
     });
   }
 
