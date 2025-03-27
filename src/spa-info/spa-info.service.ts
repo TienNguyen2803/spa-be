@@ -19,10 +19,18 @@ export class SpaInfoService {
     const spaInfo = this.spaInfoRepository.create({
       ...spaInfoData,
       banners: banners?.map(banner => ({
-        ...banner,
+        image_url: banner.image_url,
+        title: banner.title,
+        subtitle: banner.subtitle,
+        order: banner.order,
+        is_active: banner.is_active,
+        type: banner.type
       })),
       workingHours: workingHours?.map(wh => ({
-        ...wh,
+        day_of_week: wh.day,
+        opening_time: wh.open_time,
+        closing_time: wh.close_time,
+        is_closed: false
       })),
     });
 
