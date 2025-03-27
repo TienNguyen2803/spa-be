@@ -11,16 +11,18 @@ export class WorkingHour extends EntityHelper {
   @Column()
   day_of_week: string;
 
-  @Column('time')
+  @Column()
   opening_time: string;
 
-  @Column('time')
+  @Column()
   closing_time: string;
 
-  @Column()
+  @Column({ default: false })
   is_closed: boolean;
 
-  @ManyToOne(() => SpaInfo, (spaInfo) => spaInfo.workingHours)
+  @ManyToOne(() => SpaInfo, (spaInfo) => spaInfo.workingHours, {
+    onDelete: 'CASCADE'
+  })
   spaInfo: SpaInfo;
 
   @Column()

@@ -23,10 +23,12 @@ export class Banner extends EntityHelper {
   @Column()
   is_active: boolean;
 
-  @Column({ type: 'int', default: 0 })
-  type: number; // 0 - home, 1 - about, 2 - contact
+  @Column()
+  type: number;
 
-  @ManyToOne(() => SpaInfo, (spaInfo) => spaInfo.banners)
+  @ManyToOne(() => SpaInfo, (spaInfo) => spaInfo.banners, {
+    onDelete: 'CASCADE'
+  })
   spaInfo: SpaInfo;
 
   @Column()
