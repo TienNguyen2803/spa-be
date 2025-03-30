@@ -188,9 +188,7 @@ export class SpaInfoService {
 
   findManyWithPagination(query: any) {
     const { page, limit, offset, ...searchQuery } = query;
-    console.log(searchQuery)
     const where = this.filterService.buildFilter(searchQuery);
-    console.log(where)
 
     return this.spaInfoRepository.find({
       where,

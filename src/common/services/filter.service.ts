@@ -57,65 +57,24 @@ export class FilterService {
   }
 
   buildFilter(query: any, additionalFilters: any = {}) {
-    if (!query) return {};
-    if (!query.s) return {};
+    if (!query || !query.s) return additionalFilters;
 
     try {
       const searchCriteria = typeof query.s === 'string' ? JSON.parse(query.s) : query.s;
-      return this.transformFilter(searchCriteria);
+      if (searchCriteria.$and) {
+        const conditions = searchCriteria.$and.map((condition: any) => {
+          const [field, fieldConditions] = Object.entries(condition)[0];
+          if (fieldConditions.$contL) {
+            return { [field]: ILike(`%${fieldConditions.$contL}%`) };
+          }
+          return condition;
+        });
+        return conditions.length === 1 ? conditions[0] : { $and: conditions };
+      }
+      return searchCriteria;
     } catch (error) {
       console.error('Error parsing search criteria:', error);
-      return {};
+      return additionalFilters;
     }
-  }
-
-  private transformFilter(filter: any): any {
-    if (!filter) return {};
-
-    if (filter.$and) {
-      const andConditions = filter.$and.map((condition: any) => this.transformFilter(condition));
-      return { where: andConditions };
-    }
-
-    if (filter.$or) {
-      const orConditions = filter.$or.map((condition: any) => this.transformFilter(condition));
-      return { where: orConditions };
-    }
-
-    const result: any = {};
-
-    for (const [field, conditions] of Object.entries(filter)) {
-      if (typeof conditions === 'object') {
-        for (const [operator, value] of Object.entries(conditions as any)) {
-          switch (operator) {
-            case '$contL':
-              result[field] = ILike(`%${value}%`);
-              break;
-            case '$eq':
-              result[field] = value;
-              break;
-            case '$ne':
-              result[field] = Not(value);
-              break;
-            case '$gt':
-              result[field] = MoreThan(value);
-              break;
-            case '$gte':
-              result[field] = MoreThanOrEqual(value);
-              break;
-            case '$lt':
-              result[field] = LessThan(value);
-              break;
-            case '$lte':
-              result[field] = LessThanOrEqual(value);
-              break;
-          }
-        }
-      } else {
-        result[field] = conditions;
-      }
-    }
-
-    return result;
   }
 }
