@@ -10,7 +10,7 @@ import { WorkingHour } from 'src/working-hours/entities/working-hour.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([SpaInfo, Banner, WorkingHour])],
   controllers: [SpaInfoController],
-  providers: [SpaInfoService],
+  providers: [SpaInfoService, FilterService],
   exports: [SpaInfoService],
 })
 export class SpaInfoModule { }

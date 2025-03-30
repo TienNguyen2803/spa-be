@@ -184,8 +184,13 @@ export class SpaInfoService {
     }
   
 
-  findManyWithPagination({ page, limit, offset }: IPaginationOptions) {
+  findManyWithPagination(query: any) {
+    const { page, limit, offset, ...searchQuery } = query;
+    
+    const where = this.filterService.buildFilter(searchQuery);
+    
     return this.spaInfoRepository.find({
+      where,
       skip: offset,
       take: limit,
       order: {
