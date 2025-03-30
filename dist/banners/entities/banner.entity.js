@@ -45,7 +45,9 @@ __decorate([
 ], Banner.prototype, "type", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => spa_info_entity_1.SpaInfo, (spaInfo) => spaInfo.banners, {
-        onDelete: 'CASCADE'
+        nullable: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
     }),
     (0, typeorm_1.JoinColumn)({ name: 'spa_info_id' }),
     __metadata("design:type", spa_info_entity_1.SpaInfo)

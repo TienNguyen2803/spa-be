@@ -16,6 +16,12 @@ const class_transformer_1 = require("class-transformer");
 class CreateBannerDto {
 }
 __decorate([
+    (0, swagger_1.ApiProperty)({ example: 1, required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateBannerDto.prototype, "id", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({ example: 'https://example.com/image.jpg' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
@@ -47,6 +53,12 @@ __decorate([
 ], CreateBannerDto.prototype, "type", void 0);
 class CreateWorkingHourDto {
 }
+__decorate([
+    (0, swagger_1.ApiProperty)({ example: 1, required: false }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], CreateWorkingHourDto.prototype, "id", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Monday' }),
     (0, class_validator_1.IsString)(),

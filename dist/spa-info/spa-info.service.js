@@ -26,11 +26,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaInfoService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const banner_entity_1 = require("../banners/entities/banner.entity");
+const working_hour_entity_1 = require("../working-hours/entities/working-hour.entity");
 const typeorm_2 = require("typeorm");
 const spa_info_entity_1 = require("./entities/spa-info.entity");
 let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
-    constructor(spaInfoRepository) {
+    constructor(spaInfoRepository, dataSource) {
         this.spaInfoRepository = spaInfoRepository;
+        this.dataSource = dataSource;
     }
     async create(createSpaInfoDto) {
         const { banners, workingHours } = createSpaInfoDto, spaInfoData = __rest(createSpaInfoDto, ["banners", "workingHours"]);
@@ -56,12 +59,102 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
     }
     async update(id, updateSpaInfoDto) {
         const { banners, workingHours } = updateSpaInfoDto, spaInfoData = __rest(updateSpaInfoDto, ["banners", "workingHours"]);
-        const existingSpaInfo = await this.spaInfoRepository.findOneOrFail({
-            where: { id },
-            relations: ['banners', 'workingHours']
-        });
-        const updatedSpaInfo = this.spaInfoRepository.create(Object.assign(Object.assign(Object.assign({}, existingSpaInfo), spaInfoData), { banners: banners === null || banners === void 0 ? void 0 : banners.map(banner => (Object.assign(Object.assign({}, banner), { spa_info_id: id, order: banner.order || 0, is_active: banner.is_active || true, type: banner.type || 0 }))), workingHours: workingHours === null || workingHours === void 0 ? void 0 : workingHours.map(wh => (Object.assign(Object.assign({}, wh), { spa_info_id: id, is_closed: false }))) }));
-        return this.spaInfoRepository.save(updatedSpaInfo);
+        const queryRunner = this.dataSource.createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        try {
+            const existingSpaInfo = await queryRunner.manager.findOne(spa_info_entity_1.SpaInfo, {
+                where: { id },
+                relations: ['banners', 'workingHours']
+            });
+            if (!existingSpaInfo) {
+                throw new common_1.NotFoundException(`SpaInfo with ID ${id} not found`);
+            }
+            Object.assign(existingSpaInfo, spaInfoData);
+            await queryRunner.manager.save(existingSpaInfo);
+            if (banners) {
+                const bannersToKeep = banners.filter(b => b.id).map(b => b.id);
+                if (existingSpaInfo.banners && existingSpaInfo.banners.length > 0) {
+                    const bannersToDelete = existingSpaInfo.banners.filter(banner => !bannersToKeep.includes(banner.id));
+                    if (bannersToDelete.length > 0) {
+                        await queryRunner.manager.remove(bannersToDelete);
+                    }
+                }
+                for (const bannerData of banners) {
+                    if (bannerData.id) {
+                        const existingBanner = existingSpaInfo.banners.find(b => b.id === bannerData.id);
+                        if (existingBanner) {
+                            Object.assign(existingBanner, {
+                                image_url: bannerData.image_url,
+                                title: bannerData.title,
+                                subtitle: bannerData.subtitle,
+                                order: bannerData.order || 0,
+                                is_active: bannerData.is_active === undefined ? true : bannerData.is_active,
+                                type: bannerData.type || 0
+                            });
+                            await queryRunner.manager.save(existingBanner);
+                        }
+                    }
+                    else {
+                        const newBanner = new banner_entity_1.Banner();
+                        Object.assign(newBanner, {
+                            image_url: bannerData.image_url,
+                            title: bannerData.title,
+                            subtitle: bannerData.subtitle,
+                            order: bannerData.order || 0,
+                            is_active: bannerData.is_active === undefined ? true : bannerData.is_active,
+                            type: bannerData.type || 0,
+                            spa_info_id: existingSpaInfo.id
+                        });
+                        await queryRunner.manager.save(newBanner);
+                    }
+                }
+            }
+            if (workingHours) {
+                const hoursToKeep = workingHours.filter(wh => wh.id).map(wh => wh.id);
+                if (existingSpaInfo.workingHours && existingSpaInfo.workingHours.length > 0) {
+                    const hoursToDelete = existingSpaInfo.workingHours.filter(hour => !hoursToKeep.includes(hour.id));
+                    if (hoursToDelete.length > 0) {
+                        await queryRunner.manager.remove(hoursToDelete);
+                    }
+                }
+                for (const hourData of workingHours) {
+                    if (hourData.id) {
+                        const existingHour = existingSpaInfo.workingHours.find(h => h.id === hourData.id);
+                        if (existingHour) {
+                            Object.assign(existingHour, {
+                                day_of_week: hourData.day_of_week,
+                                opening_time: hourData.opening_time,
+                                closing_time: hourData.closing_time,
+                            });
+                            await queryRunner.manager.save(existingHour);
+                        }
+                    }
+                    else {
+                        const newHour = new working_hour_entity_1.WorkingHour();
+                        Object.assign(newHour, {
+                            day_of_week: hourData.day_of_week,
+                            opening_time: hourData.opening_time,
+                            closing_time: hourData.closing_time,
+                            spa_info_id: existingSpaInfo.id
+                        });
+                        await queryRunner.manager.save(newHour);
+                    }
+                }
+            }
+            await queryRunner.commitTransaction();
+            return this.spaInfoRepository.findOneOrFail({
+                where: { id },
+                relations: ['banners', 'workingHours']
+            });
+        }
+        catch (error) {
+            await queryRunner.rollbackTransaction();
+            throw error;
+        }
+        finally {
+            await queryRunner.release();
+        }
     }
     findManyWithPagination({ page, limit, offset }) {
         return this.spaInfoRepository.find({
@@ -89,6 +182,7 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
 exports.SpaInfoService = SpaInfoService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(spa_info_entity_1.SpaInfo)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.DataSource])
 ], SpaInfoService);
 //# sourceMappingURL=spa-info.service.js.map

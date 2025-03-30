@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Banner } from 'src/banners/entities/banner.entity';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
-import { Repository } from 'typeorm';
+import { WorkingHour } from 'src/working-hours/entities/working-hour.entity';
+import { DataSource, Repository } from 'typeorm';
 import { CreateSpaInfoDto } from './dto/create-spa-info.dto';
 import { UpdateSpaInfoDto } from './dto/update-spa-info.dto';
 import { SpaInfo } from './entities/spa-info.entity';
@@ -11,6 +13,7 @@ export class SpaInfoService {
   constructor(
     @InjectRepository(SpaInfo)
     private spaInfoRepository: Repository<SpaInfo>,
+     private dataSource: DataSource // Thêm DataSource vào constructor
   ) { }
 
   async create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo> {
@@ -47,34 +50,139 @@ export class SpaInfoService {
   }
 
   async update(id: number, updateSpaInfoDto: UpdateSpaInfoDto): Promise<SpaInfo> {
-    const { banners, workingHours, ...spaInfoData } = updateSpaInfoDto;
+      const { banners, workingHours, ...spaInfoData } = updateSpaInfoDto;
 
-    // Get existing spa info with relations
-    const existingSpaInfo = await this.spaInfoRepository.findOneOrFail({
-      where: { id },
-      relations: ['banners', 'workingHours']
-    });
+      // Tạo queryRunner để kiểm soát transaction
+      const queryRunner = this.dataSource.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
 
-    // Update spa info
-    const updatedSpaInfo = this.spaInfoRepository.create({
-      ...existingSpaInfo,
-      ...spaInfoData,
-      banners: banners?.map(banner => ({
-        ...banner,
-        spa_info_id: id,
-        order: banner.order || 0,
-        is_active: banner.is_active || true,
-        type: banner.type || 0
-      })),
-      workingHours: workingHours?.map(wh => ({
-        ...wh,
-        spa_info_id: id,
-        is_closed: false
-      }))
-    });
+      try {
+        // Tìm spa info hiện tại
+        const existingSpaInfo = await queryRunner.manager.findOne(SpaInfo, {
+          where: { id },
+          relations: ['banners', 'workingHours']
+        });
 
-    return this.spaInfoRepository.save(updatedSpaInfo);
-  }
+        if (!existingSpaInfo) {
+          throw new NotFoundException(`SpaInfo with ID ${id} not found`);
+        }
+
+        // 1. Cập nhật thông tin cơ bản của SpaInfo trước
+        Object.assign(existingSpaInfo, spaInfoData);
+        await queryRunner.manager.save(existingSpaInfo);
+
+        // 2. Xử lý banners
+        if (banners) {
+          // Lấy danh sách ID của banners cần giữ lại
+          const bannersToKeep = banners.filter(b => b.id).map(b => b.id);
+
+          // Xóa banners không còn trong danh sách mới
+          if (existingSpaInfo.banners && existingSpaInfo.banners.length > 0) {
+            const bannersToDelete = existingSpaInfo.banners.filter(
+              banner => !bannersToKeep.includes(banner.id)
+            );
+
+            if (bannersToDelete.length > 0) {
+              await queryRunner.manager.remove(bannersToDelete);
+            }
+          }
+
+          // Cập nhật banners hiện có
+          for (const bannerData of banners) {
+            if (bannerData.id) {
+              // Banner đã tồn tại
+              const existingBanner = existingSpaInfo.banners.find(b => b.id === bannerData.id);
+              if (existingBanner) {
+                Object.assign(existingBanner, {
+                  image_url: bannerData.image_url,
+                  title: bannerData.title,
+                  subtitle: bannerData.subtitle,
+                  order: bannerData.order || 0,
+                  is_active: bannerData.is_active === undefined ? true : bannerData.is_active,
+                  type: bannerData.type || 0
+                });
+                await queryRunner.manager.save(existingBanner);
+              }
+            } else {
+              // Banner mới
+              const newBanner = new Banner();
+              Object.assign(newBanner, {
+                image_url: bannerData.image_url,
+                title: bannerData.title,
+                subtitle: bannerData.subtitle,
+                order: bannerData.order || 0,
+                is_active: bannerData.is_active === undefined ? true : bannerData.is_active,
+                type: bannerData.type || 0,
+                spa_info_id: existingSpaInfo.id  // Thiết lập spa_info_id trực tiếp
+              });
+              await queryRunner.manager.save(newBanner);
+            }
+          }
+        }
+
+        // 3. Xử lý workingHours tương tự
+        if (workingHours) {
+          // Lấy danh sách ID của workingHours cần giữ lại
+          const hoursToKeep = workingHours.filter(wh => wh.id).map(wh => wh.id);
+
+          // Xóa workingHours không còn trong danh sách mới
+          if (existingSpaInfo.workingHours && existingSpaInfo.workingHours.length > 0) {
+            const hoursToDelete = existingSpaInfo.workingHours.filter(
+              hour => !hoursToKeep.includes(hour.id)
+            );
+
+            if (hoursToDelete.length > 0) {
+              await queryRunner.manager.remove(hoursToDelete);
+            }
+          }
+
+          // Cập nhật workingHours hiện có
+          for (const hourData of workingHours) {
+            if (hourData.id) {
+              // WorkingHour đã tồn tại
+              const existingHour = existingSpaInfo.workingHours.find(h => h.id === hourData.id);
+              if (existingHour) {
+                Object.assign(existingHour, {
+                  day_of_week: hourData.day_of_week,
+                  opening_time: hourData.opening_time,
+                  closing_time: hourData.closing_time,
+                });
+                await queryRunner.manager.save(existingHour);
+              }
+            } else {
+              // WorkingHour mới
+              const newHour = new WorkingHour();
+              Object.assign(newHour, {
+                day_of_week: hourData.day_of_week,
+                opening_time: hourData.opening_time,
+                closing_time: hourData.closing_time,
+                spa_info_id: existingSpaInfo.id  // Thiết lập spa_info_id trực tiếp
+              });
+              await queryRunner.manager.save(newHour);
+            }
+          }
+        }
+
+        // Commit transaction nếu mọi thứ thành công
+        await queryRunner.commitTransaction();
+
+        // Trả về entity đã được cập nhật
+        return this.spaInfoRepository.findOneOrFail({
+          where: { id },
+          relations: ['banners', 'workingHours']
+        });
+
+      } catch (error) {
+        // Rollback nếu có lỗi
+        await queryRunner.rollbackTransaction();
+        throw error;
+      } finally {
+        // Giải phóng queryRunner
+        await queryRunner.release();
+      }
+    }
+  
 
   findManyWithPagination({ page, limit, offset }: IPaginationOptions) {
     return this.spaInfoRepository.find({

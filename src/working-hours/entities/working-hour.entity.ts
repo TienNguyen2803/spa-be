@@ -21,7 +21,9 @@ export class WorkingHour extends EntityHelper {
   is_closed: boolean;
 
   @ManyToOne(() => SpaInfo, (spaInfo) => spaInfo.workingHours, {
-    onDelete: 'CASCADE'
+    onDelete: 'CASCADE',
+    nullable: false,
+    onUpdate: 'CASCADE'
   })
   @JoinColumn({ name: 'spa_info_id' })
   spa_info: SpaInfo;

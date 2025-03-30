@@ -1,9 +1,14 @@
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEmail, IsArray, ValidateNested, IsOptional, IsNotEmpty } from 'class-validator';
+import { IsString, IsEmail, IsArray, ValidateNested, IsOptional, IsNotEmpty, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class CreateBannerDto {
+  @ApiProperty({ example: 1, required: false })
+  @IsOptional()
+  @IsNumber()
+  id?: number;
+
   @ApiProperty({ example: 'https://example.com/image.jpg' })
   @IsString()
   image_url: string;
@@ -30,6 +35,11 @@ class CreateBannerDto {
 }
 
 class CreateWorkingHourDto {
+  @ApiProperty({ example: 1, required: false })
+  @IsOptional()
+  @IsNumber()
+  id?: number;
+
   @ApiProperty({ example: 'Monday' })
   @IsString()
   day_of_week: string;

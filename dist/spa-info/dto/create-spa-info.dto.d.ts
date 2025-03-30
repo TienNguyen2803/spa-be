@@ -1,4 +1,5 @@
 declare class CreateBannerDto {
+    id?: number;
     image_url: string;
     title: string;
     subtitle: string;
@@ -7,6 +8,7 @@ declare class CreateBannerDto {
     type: number;
 }
 declare class CreateWorkingHourDto {
+    id?: number;
     day_of_week: string;
     opening_time: string;
     closing_time: string;

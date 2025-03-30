@@ -27,7 +27,9 @@ export class Banner extends EntityHelper {
   type: number;
 
   @ManyToOne(() => SpaInfo, (spaInfo) => spaInfo.banners, {
-    onDelete: 'CASCADE'
+    nullable: false,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
   })
   @JoinColumn({ name: 'spa_info_id' })
   spa_info: SpaInfo;
