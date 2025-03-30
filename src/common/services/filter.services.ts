@@ -136,7 +136,7 @@ export class FilterService {
     const order = this.parseSortParams(query);
 
     // Parse search filter
-    let where: any = additionalFilters;
+    let where: any = { ...additionalFilters };
 
     if (query.s) {
       try {
@@ -144,13 +144,12 @@ export class FilterService {
         const typeormQuery = this.transformFilterToTypeORM(searchObject);
 
         // Merge với additional filters
-        where = { ...typeormQuery, ...additionalFilters };
+        where = { ...where, ...typeormQuery };
 
         // Log để debug
         console.log('TypeORM PostgreSQL query:', JSON.stringify(where, null, 2));
       } catch (error) {
         console.error('Error parsing search filter:', error);
-        where = additionalFilters;
       }
     }
 
@@ -160,7 +159,7 @@ export class FilterService {
       order,
       skip: offset,
       take: limit,
-      relations,
+      relations: relations || [],
     });
 
     // Calculate pagination metadata
