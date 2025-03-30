@@ -9,6 +9,4 @@ export declare class SpaInfoController {
         data: SpaInfo[];
         total: number;
     }>>;
-    findOne(id: number): Promise<SpaInfo>;
-    remove(id: number): Promise<void>;
 }

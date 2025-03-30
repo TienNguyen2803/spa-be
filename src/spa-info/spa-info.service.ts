@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
 import { Repository } from 'typeorm';
 import { CreateSpaInfoDto } from './dto/create-spa-info.dto';
+import { UpdateSpaInfoDto } from './dto/update-spa-info.dto';
 import { SpaInfo } from './entities/spa-info.entity';
 
 @Injectable()
@@ -42,12 +43,16 @@ export class SpaInfoService {
     return this.spaInfoRepository.findOneOrFail({
       where: { id: spaInfo.id },
       relations: ['banners', 'workingHours']
+    })
+  }
 
   async update(id: number, updateSpaInfoDto: UpdateSpaInfoDto): Promise<SpaInfo> {
     const { banners, workingHours, ...spaInfoData } = updateSpaInfoDto;
-    
+
     // Get existing spa info
-    const existingSpaInfo = await this.findOne(id);
+    const existingSpaInfo = await this.spaInfoRepository.findOneOrFail({
+      where: { id },
+    })
 
     // Update spa info
     const updatedSpaInfo = this.spaInfoRepository.create({
@@ -70,9 +75,6 @@ export class SpaInfoService {
     });
 
     return this.spaInfoRepository.save(updatedSpaInfo);
-  }
-
-    });
   }
 
   findManyWithPagination({ page, limit, offset }: IPaginationOptions) {
