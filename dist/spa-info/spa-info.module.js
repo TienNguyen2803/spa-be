@@ -20,7 +20,7 @@ exports.SpaInfoModule = SpaInfoModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([spa_info_entity_1.SpaInfo, banner_entity_1.Banner, working_hour_entity_1.WorkingHour])],
         controllers: [spa_info_controller_1.SpaInfoController],
-        providers: [spa_info_service_1.SpaInfoService],
+        providers: [spa_info_service_1.SpaInfoService, FilterService],
         exports: [spa_info_service_1.SpaInfoService],
     })
 ], SpaInfoModule);
