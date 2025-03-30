@@ -48,7 +48,7 @@ export class SpaInfoController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get all spa info with pagination' })
+  @ApiOperation({ summary: 'Get spa info list' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Get spa info list',
@@ -58,28 +58,8 @@ export class SpaInfoController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
   ) {
-    if (limit > 50) {
-      limit = 50;
-    }
-
     return standardPagination(
       await this.spaInfoService.findManyWithPagination({
-
-  @Put(':id')
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Update spa info' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Spa info has been successfully updated',
-    type: SpaInfo,
-  })
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateSpaInfoDto: UpdateSpaInfoDto,
-  ): Promise<SpaInfo> {
-    return this.spaInfoService.update(id, updateSpaInfoDto);
-  }
-
         page,
         limit,
         offset: (page - 1) * limit,
@@ -98,6 +78,21 @@ export class SpaInfoController {
   })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.spaInfoService.findOne(id);
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Update spa info' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Spa info has been successfully updated',
+    type: SpaInfo,
+  })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateSpaInfoDto: UpdateSpaInfoDto,
+  ): Promise<SpaInfo> {
+    return this.spaInfoService.update(id, updateSpaInfoDto);
   }
 
   @Delete(':id')
