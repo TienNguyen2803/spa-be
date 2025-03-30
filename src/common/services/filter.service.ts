@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { Like, Not, LessThan, MoreThan, LessThanOrEqual, MoreThanOrEqual, In, IsNull, ILike } from 'typeorm';
 
@@ -58,18 +57,74 @@ export class FilterService {
   }
 
   buildFilter(query: any, additionalFilters: any = {}) {
-    let where: any = { ...additionalFilters };
+    if (!query) return {};
+    if (!query.s) return {};
 
-    if (query.s) {
-      try {
-        const searchObject = this.parseSearchQuery(query.s);
-        const typeormQuery = this.transformFilterToTypeORM(searchObject);
-        where = { ...where, ...typeormQuery };
-      } catch (error) {
-        console.error('Error parsing search filter:', error);
+    try {
+      const searchCriteria = typeof query.s === 'string' ? JSON.parse(query.s) : query.s;
+      return this.transformFilter(searchCriteria);
+    } catch (error) {
+      console.error('Error parsing search criteria:', error);
+      return {};
+    }
+  }
+
+  private transformFilter(filter: any): any {
+    if (!filter) return {};
+
+    // Handle AND operator
+    if (filter.$and) {
+      return {
+        $and: filter.$and.map((condition: any) => this.transformFilter(condition))
+      };
+    }
+
+    // Handle OR operator  
+    if (filter.$or) {
+      return {
+        $or: filter.$or.map((condition: any) => this.transformFilter(condition))
+      };
+    }
+
+    const transformedFilter: any = {};
+
+    // Handle field conditions
+    for (const [field, conditions] of Object.entries(filter)) {
+      if (typeof conditions === 'object') {
+        const fieldFilters: any = {};
+
+        for (const [operator, value] of Object.entries(conditions as any)) {
+          switch (operator) {
+            case '$contL':
+              fieldFilters.ilike = `%${value}%`;
+              break;
+            case '$eq':
+              fieldFilters.equals = value;
+              break;
+            case '$ne':
+              fieldFilters.not = value;
+              break;
+            case '$gt':
+              fieldFilters.gt = value;
+              break;
+            case '$gte':
+              fieldFilters.gte = value;
+              break;
+            case '$lt':
+              fieldFilters.lt = value;
+              break;
+            case '$lte':
+              fieldFilters.lte = value;
+              break;
+          }
+        }
+
+        transformedFilter[field] = fieldFilters;
+      } else {
+        transformedFilter[field] = conditions;
       }
     }
 
-    return where;
+    return transformedFilter;
   }
 }
