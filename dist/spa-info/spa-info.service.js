@@ -27,12 +27,14 @@ exports.SpaInfoService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const banner_entity_1 = require("../banners/entities/banner.entity");
+const filter_services_1 = require("../common/services/filter.services");
 const working_hour_entity_1 = require("../working-hours/entities/working-hour.entity");
 const typeorm_2 = require("typeorm");
 const spa_info_entity_1 = require("./entities/spa-info.entity");
 let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
-    constructor(spaInfoRepository, dataSource) {
+    constructor(spaInfoRepository, filterService, dataSource) {
         this.spaInfoRepository = spaInfoRepository;
+        this.filterService = filterService;
         this.dataSource = dataSource;
     }
     async create(createSpaInfoDto) {
@@ -156,15 +158,9 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
             await queryRunner.release();
         }
     }
-    findManyWithPagination({ page, limit, offset }) {
-        return this.spaInfoRepository.find({
-            skip: offset,
-            take: limit,
-            order: {
-                id: 'DESC',
-            },
-            relations: ['banners', 'workingHours'],
-        });
+    findManyWithPagination(query) {
+        const relations = ['banners', 'workingHours'];
+        return this.filterService.applyFilter(this.spaInfoRepository, query, relations);
     }
     standardCount() {
         return this.spaInfoRepository.count();
@@ -183,6 +179,7 @@ exports.SpaInfoService = SpaInfoService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(spa_info_entity_1.SpaInfo)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        filter_services_1.FilterService,
         typeorm_2.DataSource])
 ], SpaInfoService);
 //# sourceMappingURL=spa-info.service.js.map

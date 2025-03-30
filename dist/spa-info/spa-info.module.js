@@ -14,11 +14,12 @@ const spa_info_controller_1 = require("./spa-info.controller");
 const spa_info_entity_1 = require("./entities/spa-info.entity");
 const banner_entity_1 = require("../banners/entities/banner.entity");
 const working_hour_entity_1 = require("../working-hours/entities/working-hour.entity");
+const common_module_1 = require("../common/common.module");
 let SpaInfoModule = exports.SpaInfoModule = class SpaInfoModule {
 };
 exports.SpaInfoModule = SpaInfoModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([spa_info_entity_1.SpaInfo, banner_entity_1.Banner, working_hour_entity_1.WorkingHour])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([spa_info_entity_1.SpaInfo, banner_entity_1.Banner, working_hour_entity_1.WorkingHour]), common_module_1.CommonModule],
         controllers: [spa_info_controller_1.SpaInfoController],
         providers: [spa_info_service_1.SpaInfoService],
         exports: [spa_info_service_1.SpaInfoService],
