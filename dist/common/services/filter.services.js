@@ -92,17 +92,16 @@ let FilterService = exports.FilterService = class FilterService {
         const page = query.page || 1;
         const offset = query.offset || (page - 1) * limit;
         const order = this.parseSortParams(query);
-        let where = additionalFilters;
+        let where = Object.assign({}, additionalFilters);
         if (query.s) {
             try {
                 const searchObject = JSON.parse(query.s);
                 const typeormQuery = this.transformFilterToTypeORM(searchObject);
-                where = Object.assign(Object.assign({}, typeormQuery), additionalFilters);
+                where = Object.assign(Object.assign({}, where), typeormQuery);
                 console.log('TypeORM PostgreSQL query:', JSON.stringify(where, null, 2));
             }
             catch (error) {
                 console.error('Error parsing search filter:', error);
-                where = additionalFilters;
             }
         }
         const [data, itemCount] = await repository.findAndCount({
@@ -110,7 +109,7 @@ let FilterService = exports.FilterService = class FilterService {
             order,
             skip: offset,
             take: limit,
-            relations,
+            relations: relations || [],
         });
         const pageCount = Math.ceil(itemCount / limit);
         return {
