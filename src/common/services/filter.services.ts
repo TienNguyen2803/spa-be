@@ -84,6 +84,11 @@ export class FilterService {
 
     // Xử lý các trường thông thường
     for (const key in query) {
+      // Bỏ qua các key là số (relations array index)
+      if (!isNaN(Number(key))) {
+        continue;
+      }
+      
       const value = query[key];
 
       // Nếu value là object và có chứa các toán tử
