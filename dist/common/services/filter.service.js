@@ -81,51 +81,47 @@ let FilterService = exports.FilterService = class FilterService {
         if (!filter)
             return {};
         if (filter.$and) {
-            return {
-                $and: filter.$and.map((condition) => this.transformFilter(condition))
-            };
+            const andConditions = filter.$and.map((condition) => this.transformFilter(condition));
+            return { where: andConditions };
         }
         if (filter.$or) {
-            return {
-                $or: filter.$or.map((condition) => this.transformFilter(condition))
-            };
+            const orConditions = filter.$or.map((condition) => this.transformFilter(condition));
+            return { where: orConditions };
         }
-        const transformedFilter = {};
+        const result = {};
         for (const [field, conditions] of Object.entries(filter)) {
             if (typeof conditions === 'object') {
-                const fieldFilters = {};
                 for (const [operator, value] of Object.entries(conditions)) {
                     switch (operator) {
                         case '$contL':
-                            fieldFilters.ilike = `%${value}%`;
+                            result[field] = (0, typeorm_1.ILike)(`%${value}%`);
                             break;
                         case '$eq':
-                            fieldFilters.equals = value;
+                            result[field] = value;
                             break;
                         case '$ne':
-                            fieldFilters.not = value;
+                            result[field] = (0, typeorm_1.Not)(value);
                             break;
                         case '$gt':
-                            fieldFilters.gt = value;
+                            result[field] = (0, typeorm_1.MoreThan)(value);
                             break;
                         case '$gte':
-                            fieldFilters.gte = value;
+                            result[field] = (0, typeorm_1.MoreThanOrEqual)(value);
                             break;
                         case '$lt':
-                            fieldFilters.lt = value;
+                            result[field] = (0, typeorm_1.LessThan)(value);
                             break;
                         case '$lte':
-                            fieldFilters.lte = value;
+                            result[field] = (0, typeorm_1.LessThanOrEqual)(value);
                             break;
                     }
                 }
-                transformedFilter[field] = fieldFilters;
             }
             else {
-                transformedFilter[field] = conditions;
+                result[field] = conditions;
             }
         }
-        return transformedFilter;
+        return result;
     }
 };
 exports.FilterService = FilterService = __decorate([
