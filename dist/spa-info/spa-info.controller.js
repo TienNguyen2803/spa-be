@@ -15,11 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaInfoController = void 0;
 const common_1 = require("@nestjs/common");
 const update_spa_info_dto_1 = require("./dto/update-spa-info.dto");
+const standard_pagination_1 = require("../utils/standard-pagination");
 const spa_info_service_1 = require("./spa-info.service");
 const create_spa_info_dto_1 = require("./dto/create-spa-info.dto");
 const swagger_1 = require("@nestjs/swagger");
 const spa_info_entity_1 = require("./entities/spa-info.entity");
-const page_options_dto_1 = require("../common/dto/page-options.dto");
 let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
     constructor(spaInfoService) {
         this.spaInfoService = spaInfoService;
@@ -27,8 +27,12 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
     create(createSpaInfoDto) {
         return this.spaInfoService.create(createSpaInfoDto);
     }
-    async findAll(query) {
-        return this.spaInfoService.findManyWithPagination(query);
+    async findAll(page, limit) {
+        return (0, standard_pagination_1.standardPagination)(await this.spaInfoService.findManyWithPagination({
+            page,
+            limit,
+            offset: (page - 1) * limit,
+        }), await this.spaInfoService.standardCount());
     }
     findOne(id) {
         return this.spaInfoService.findOne(id);
@@ -63,16 +67,10 @@ __decorate([
         description: 'Get spa info list',
         type: [spa_info_entity_1.SpaInfo],
     }),
-    (0, swagger_1.ApiQuery)({
-        name: 's',
-        required: false,
-        type: String,
-        description: 'Search query in JSON format',
-        example: '{"$and":[{"q":{"$contL":"3"}}]}',
-    }),
-    __param(0, (0, common_1.Query)()),
+    __param(0, (0, common_1.Query)('page', new common_1.DefaultValuePipe(1), common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Query)('limit', new common_1.DefaultValuePipe(10), common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [page_options_dto_1.PageOptionsDto]),
+    __metadata("design:paramtypes", [Number, Number]),
     __metadata("design:returntype", Promise)
 ], SpaInfoController.prototype, "findAll", null);
 __decorate([

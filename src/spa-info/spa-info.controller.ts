@@ -20,12 +20,10 @@ import { standardPagination } from '../utils/standard-pagination';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { SpaInfoService } from './spa-info.service';
 import { CreateSpaInfoDto } from './dto/create-spa-info.dto';
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../roles/roles.guard';
 import { SpaInfo } from './entities/spa-info.entity';
-import { PageOptionsDto } from 'src/common/dto/page-options.dto';
-import { PageResponse } from 'src/common/interfaces/page-reponse.interfaces';
 
 // @ApiBearerAuth()
 // @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -57,15 +55,18 @@ export class SpaInfoController {
     description: 'Get spa info list',
     type: [SpaInfo],
   })
-  @ApiQuery({
-    name: 's',
-    required: false,
-    type: String,
-    description: 'Search query in JSON format',
-    example: '{"$and":[{"q":{"$contL":"3"}}]}',
-  })
-  async findAll(@Query() query: PageOptionsDto): Promise<PageResponse<SpaInfo>> {
-    return this.spaInfoService.findManyWithPagination(query);
+  async findAll(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return standardPagination(
+      await this.spaInfoService.findManyWithPagination({
+        page,
+        limit,
+        offset: (page - 1) * limit,
+      }),
+      await this.spaInfoService.standardCount(),
+    );
   }
 
   @Get(':id')
