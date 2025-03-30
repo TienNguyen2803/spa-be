@@ -3,4 +3,5 @@ export declare class FilterService {
     transformFilterToTypeORM(filter: any): any;
     parseSearchQuery(query: string): any;
     buildFilter(query: any, additionalFilters?: any): any;
+    private transformFilter;
 }

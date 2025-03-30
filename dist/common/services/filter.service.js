@@ -64,18 +64,68 @@ let FilterService = exports.FilterService = class FilterService {
         }
     }
     buildFilter(query, additionalFilters = {}) {
-        let where = Object.assign({}, additionalFilters);
-        if (query.s) {
-            try {
-                const searchObject = this.parseSearchQuery(query.s);
-                const typeormQuery = this.transformFilterToTypeORM(searchObject);
-                where = Object.assign(Object.assign({}, where), typeormQuery);
+        if (!query)
+            return {};
+        if (!query.s)
+            return {};
+        try {
+            const searchCriteria = typeof query.s === 'string' ? JSON.parse(query.s) : query.s;
+            return this.transformFilter(searchCriteria);
+        }
+        catch (error) {
+            console.error('Error parsing search criteria:', error);
+            return {};
+        }
+    }
+    transformFilter(filter) {
+        if (!filter)
+            return {};
+        if (filter.$and) {
+            return {
+                $and: filter.$and.map((condition) => this.transformFilter(condition))
+            };
+        }
+        if (filter.$or) {
+            return {
+                $or: filter.$or.map((condition) => this.transformFilter(condition))
+            };
+        }
+        const transformedFilter = {};
+        for (const [field, conditions] of Object.entries(filter)) {
+            if (typeof conditions === 'object') {
+                const fieldFilters = {};
+                for (const [operator, value] of Object.entries(conditions)) {
+                    switch (operator) {
+                        case '$contL':
+                            fieldFilters.ilike = `%${value}%`;
+                            break;
+                        case '$eq':
+                            fieldFilters.equals = value;
+                            break;
+                        case '$ne':
+                            fieldFilters.not = value;
+                            break;
+                        case '$gt':
+                            fieldFilters.gt = value;
+                            break;
+                        case '$gte':
+                            fieldFilters.gte = value;
+                            break;
+                        case '$lt':
+                            fieldFilters.lt = value;
+                            break;
+                        case '$lte':
+                            fieldFilters.lte = value;
+                            break;
+                    }
+                }
+                transformedFilter[field] = fieldFilters;
             }
-            catch (error) {
-                console.error('Error parsing search filter:', error);
+            else {
+                transformedFilter[field] = conditions;
             }
         }
-        return where;
+        return transformedFilter;
     }
 };
 exports.FilterService = FilterService = __decorate([
