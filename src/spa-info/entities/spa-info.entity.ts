@@ -24,9 +24,6 @@ export class SpaInfo extends EntityHelper {
   @Column()
   email: string;
 
-  @Column('text')
-  description: string;
-
   @Column()
   seo_title: string;
 

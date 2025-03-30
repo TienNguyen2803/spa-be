@@ -92,7 +92,7 @@ __decorate([
 ], CreateSpaInfoDto.prototype, "email", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Welcome to our luxury spa...' }),
-    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateSpaInfoDto.prototype, "description", void 0);
 __decorate([

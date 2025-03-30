@@ -8,7 +8,6 @@ export declare class SpaInfo extends EntityHelper {
     address: string;
     phone: string;
     email: string;
-    description: string;
     seo_title: string;
     seo_description: string;
     facebook_url: string;

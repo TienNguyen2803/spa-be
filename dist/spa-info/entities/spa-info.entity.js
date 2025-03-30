@@ -41,10 +41,6 @@ __decorate([
     __metadata("design:type", String)
 ], SpaInfo.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)('text'),
-    __metadata("design:type", String)
-], SpaInfo.prototype, "description", void 0);
-__decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], SpaInfo.prototype, "seo_title", void 0);

@@ -65,7 +65,7 @@ export class CreateSpaInfoDto {
   email: string;
 
   @ApiProperty({ example: 'Welcome to our luxury spa...' })
-  @IsString()
+  @IsOptional()
   description: string;
 
   @ApiProperty({ example: 'Luxury Spa - Relaxation & Wellness' })
