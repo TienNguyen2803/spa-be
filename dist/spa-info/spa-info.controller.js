@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaInfoController = void 0;
 const common_1 = require("@nestjs/common");
 const update_spa_info_dto_1 = require("./dto/update-spa-info.dto");
-const standard_pagination_1 = require("../utils/standard-pagination");
 const spa_info_service_1 = require("./spa-info.service");
 const create_spa_info_dto_1 = require("./dto/create-spa-info.dto");
 const swagger_1 = require("@nestjs/swagger");
@@ -27,12 +26,21 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
     create(createSpaInfoDto) {
         return this.spaInfoService.create(createSpaInfoDto);
     }
-    async findAll(page, limit) {
-        return (0, standard_pagination_1.standardPagination)(await this.spaInfoService.findManyWithPagination({
+    async findAll(page, limit, s) {
+        const query = {
             page,
             limit,
             offset: (page - 1) * limit,
-        }), await this.spaInfoService.standardCount());
+            s
+        };
+        const [data, total] = await Promise.all([
+            this.spaInfoService.findManyWithPagination(query),
+            this.spaInfoService.standardCount(),
+        ]);
+        return {
+            data,
+            total,
+        };
     }
     findOne(id) {
         return this.spaInfoService.findOne(id);
@@ -69,8 +77,9 @@ __decorate([
     }),
     __param(0, (0, common_1.Query)('page', new common_1.DefaultValuePipe(1), common_1.ParseIntPipe)),
     __param(1, (0, common_1.Query)('limit', new common_1.DefaultValuePipe(10), common_1.ParseIntPipe)),
+    __param(2, (0, common_1.Query)('s')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, String]),
     __metadata("design:returntype", Promise)
 ], SpaInfoController.prototype, "findAll", null);
 __decorate([
