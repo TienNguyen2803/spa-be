@@ -42,6 +42,36 @@ export class SpaInfoService {
     return this.spaInfoRepository.findOneOrFail({
       where: { id: spaInfo.id },
       relations: ['banners', 'workingHours']
+
+  async update(id: number, updateSpaInfoDto: UpdateSpaInfoDto): Promise<SpaInfo> {
+    const { banners, workingHours, ...spaInfoData } = updateSpaInfoDto;
+    
+    // Get existing spa info
+    const existingSpaInfo = await this.findOne(id);
+
+    // Update spa info
+    const updatedSpaInfo = this.spaInfoRepository.create({
+      ...existingSpaInfo,
+      ...spaInfoData,
+      banners: banners?.map(banner => ({
+        image_url: banner.image_url,
+        title: banner.title,
+        subtitle: banner.subtitle,
+        order: banner.order || 0,
+        is_active: banner.is_active || true,
+        type: banner.type || 0
+      })),
+      workingHours: workingHours?.map(wh => ({
+        day_of_week: wh.day_of_week,
+        opening_time: wh.opening_time,
+        closing_time: wh.closing_time,
+        is_closed: false
+      }))
+    });
+
+    return this.spaInfoRepository.save(updatedSpaInfo);
+  }
+
     });
   }
 

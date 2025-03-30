@@ -2,6 +2,7 @@
 import {
   Controller,
   Post,
+  Put,
   Get,
   Query,
   Body,
@@ -13,6 +14,7 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
+import { UpdateSpaInfoDto } from './dto/update-spa-info.dto';
 import { standardPagination } from '../utils/standard-pagination';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { SpaInfoService } from './spa-info.service';
@@ -62,6 +64,22 @@ export class SpaInfoController {
 
     return standardPagination(
       await this.spaInfoService.findManyWithPagination({
+
+  @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Update spa info' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Spa info has been successfully updated',
+    type: SpaInfo,
+  })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateSpaInfoDto: UpdateSpaInfoDto,
+  ): Promise<SpaInfo> {
+    return this.spaInfoService.update(id, updateSpaInfoDto);
+  }
+
         page,
         limit,
         offset: (page - 1) * limit,
