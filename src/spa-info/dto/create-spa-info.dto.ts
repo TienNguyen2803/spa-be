@@ -32,15 +32,15 @@ class CreateBannerDto {
 class CreateWorkingHourDto {
   @ApiProperty({ example: 'Monday' })
   @IsString()
-  day: string;
+  day_of_week: string;
 
   @ApiProperty({ example: '09:00' })
   @IsString()
-  open_time: string;
+  opening_time: string;
 
   @ApiProperty({ example: '18:00' })
   @IsString()
-  close_time: string;
+  closing_time: string;
 }
 
 export class CreateSpaInfoDto {

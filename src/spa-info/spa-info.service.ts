@@ -27,9 +27,9 @@ export class SpaInfoService {
         type: banner.type
       })),
       workingHours: workingHours?.map(wh => ({
-        day_of_week: wh.day,
-        opening_time: wh.open_time,
-        closing_time: wh.close_time,
+        day_of_week: wh.day_of_week,
+        opening_time: wh.opening_time,
+        closing_time: wh.closing_time,
         is_closed: false
       }))
     });
