@@ -19,7 +19,7 @@ import { standardPagination } from '../utils/standard-pagination';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { SpaInfoService } from './spa-info.service';
 import { CreateSpaInfoDto } from './dto/create-spa-info.dto';
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../roles/roles.guard';
 import { SpaInfo } from './entities/spa-info.entity';

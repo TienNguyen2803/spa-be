@@ -70,6 +70,12 @@ __decorate([
     (0, common_1.Get)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, swagger_1.ApiOperation)({ summary: 'Get spa info list' }),
+    (0, swagger_1.ApiQuery)({
+        name: 's',
+        required: false,
+        type: String,
+        description: 'Search query in JSON format. Example: {"name":{"$contL":"spa"}} or {"$and":[{"name":{"$contL":"spa"}},{"is_active":true}]}'
+    }),
     (0, swagger_1.ApiResponse)({
         status: common_1.HttpStatus.OK,
         description: 'Get spa info list',
