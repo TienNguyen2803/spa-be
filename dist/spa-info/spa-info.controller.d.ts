@@ -6,10 +6,10 @@ export declare class SpaInfoController {
     private readonly spaInfoService;
     constructor(spaInfoService: SpaInfoService);
     create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo>;
-    findAll(page: number, limit: number, s?: string): Promise<{
+    findAll(page: number, limit: number): Promise<Readonly<{
         data: SpaInfo[];
         total: number;
-    }>;
+    }>>;
     findOne(id: number): Promise<SpaInfo>;
     update(id: number, updateSpaInfoDto: UpdateSpaInfoDto): Promise<SpaInfo>;
     remove(id: number): Promise<void>;

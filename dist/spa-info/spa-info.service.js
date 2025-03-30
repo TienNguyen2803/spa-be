@@ -27,15 +27,13 @@ exports.SpaInfoService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const banner_entity_1 = require("../banners/entities/banner.entity");
-const filter_service_1 = require("../common/services/filter.service");
 const working_hour_entity_1 = require("../working-hours/entities/working-hour.entity");
 const typeorm_2 = require("typeorm");
 const spa_info_entity_1 = require("./entities/spa-info.entity");
 let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
-    constructor(spaInfoRepository, dataSource, filterService) {
+    constructor(spaInfoRepository, dataSource) {
         this.spaInfoRepository = spaInfoRepository;
         this.dataSource = dataSource;
-        this.filterService = filterService;
     }
     async create(createSpaInfoDto) {
         const { banners, workingHours } = createSpaInfoDto, spaInfoData = __rest(createSpaInfoDto, ["banners", "workingHours"]);
@@ -158,13 +156,8 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
             await queryRunner.release();
         }
     }
-    findManyWithPagination(query) {
-        const { page, limit, offset } = query, searchQuery = __rest(query, ["page", "limit", "offset"]);
-        console.log(searchQuery);
-        const where = this.filterService.buildFilter(searchQuery);
-        console.log(where);
+    findManyWithPagination({ page, limit, offset }) {
         return this.spaInfoRepository.find({
-            where,
             skip: offset,
             take: limit,
             order: {
@@ -190,7 +183,6 @@ exports.SpaInfoService = SpaInfoService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(spa_info_entity_1.SpaInfo)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.DataSource,
-        filter_service_1.FilterService])
+        typeorm_2.DataSource])
 ], SpaInfoService);
 //# sourceMappingURL=spa-info.service.js.map

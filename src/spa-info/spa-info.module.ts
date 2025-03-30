@@ -6,12 +6,11 @@ import { SpaInfoController } from './spa-info.controller';
 import { SpaInfo } from './entities/spa-info.entity';
 import { Banner } from 'src/banners/entities/banner.entity';
 import { WorkingHour } from 'src/working-hours/entities/working-hour.entity';
-import { FilterService } from 'src/common/services/filter.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SpaInfo, Banner, WorkingHour])],
   controllers: [SpaInfoController],
-  providers: [SpaInfoService, FilterService],
+  providers: [SpaInfoService],
   exports: [SpaInfoService],
 })
 export class SpaInfoModule { }
