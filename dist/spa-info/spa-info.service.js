@@ -58,20 +58,9 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
         const { banners, workingHours } = updateSpaInfoDto, spaInfoData = __rest(updateSpaInfoDto, ["banners", "workingHours"]);
         const existingSpaInfo = await this.spaInfoRepository.findOneOrFail({
             where: { id },
+            relations: ['banners', 'workingHours']
         });
-        const updatedSpaInfo = this.spaInfoRepository.create(Object.assign(Object.assign(Object.assign({}, existingSpaInfo), spaInfoData), { banners: banners === null || banners === void 0 ? void 0 : banners.map(banner => ({
-                image_url: banner.image_url,
-                title: banner.title,
-                subtitle: banner.subtitle,
-                order: banner.order || 0,
-                is_active: banner.is_active || true,
-                type: banner.type || 0
-            })), workingHours: workingHours === null || workingHours === void 0 ? void 0 : workingHours.map(wh => ({
-                day_of_week: wh.day_of_week,
-                opening_time: wh.opening_time,
-                closing_time: wh.closing_time,
-                is_closed: false
-            })) }));
+        const updatedSpaInfo = this.spaInfoRepository.create(Object.assign(Object.assign(Object.assign({}, existingSpaInfo), spaInfoData), { banners: banners === null || banners === void 0 ? void 0 : banners.map(banner => (Object.assign(Object.assign({}, banner), { spa_info_id: id, order: banner.order || 0, is_active: banner.is_active || true, type: banner.type || 0 }))), workingHours: workingHours === null || workingHours === void 0 ? void 0 : workingHours.map(wh => (Object.assign(Object.assign({}, wh), { spa_info_id: id, is_closed: false }))) }));
         return this.spaInfoRepository.save(updatedSpaInfo);
     }
     findManyWithPagination({ page, limit, offset }) {
