@@ -49,6 +49,12 @@ export class SpaInfoController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get spa info list' })
+  @ApiQuery({
+    name: 's',
+    required: false,
+    type: String,
+    description: 'Search query in JSON format. Example: {"name":{"$contL":"spa"}} or {"$and":[{"name":{"$contL":"spa"}},{"is_active":true}]}'
+  })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Get spa info list',
