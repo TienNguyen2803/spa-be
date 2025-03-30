@@ -51,17 +51,17 @@ __decorate([
     (0, swagger_1.ApiProperty)({ example: 'Monday' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateWorkingHourDto.prototype, "day", void 0);
+], CreateWorkingHourDto.prototype, "day_of_week", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '09:00' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateWorkingHourDto.prototype, "open_time", void 0);
+], CreateWorkingHourDto.prototype, "opening_time", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ example: '18:00' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateWorkingHourDto.prototype, "close_time", void 0);
+], CreateWorkingHourDto.prototype, "closing_time", void 0);
 class CreateSpaInfoDto {
 }
 exports.CreateSpaInfoDto = CreateSpaInfoDto;

@@ -7,9 +7,9 @@ declare class CreateBannerDto {
     type: number;
 }
 declare class CreateWorkingHourDto {
-    day: string;
-    open_time: string;
-    close_time: string;
+    day_of_week: string;
+    opening_time: string;
+    closing_time: string;
 }
 export declare class CreateSpaInfoDto {
     name: string;

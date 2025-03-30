@@ -42,9 +42,9 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
                 is_active: banner.is_active,
                 type: banner.type
             })), workingHours: workingHours === null || workingHours === void 0 ? void 0 : workingHours.map(wh => ({
-                day_of_week: wh.day,
-                opening_time: wh.open_time,
-                closing_time: wh.close_time,
+                day_of_week: wh.day_of_week,
+                opening_time: wh.opening_time,
+                closing_time: wh.closing_time,
                 is_closed: false
             })) }));
         await this.spaInfoRepository.save(spaInfo);
