@@ -72,59 +72,50 @@ export class FilterService {
   private transformFilter(filter: any): any {
     if (!filter) return {};
 
-    // Handle AND operator
     if (filter.$and) {
-      return {
-        $and: filter.$and.map((condition: any) => this.transformFilter(condition))
-      };
+      const andConditions = filter.$and.map((condition: any) => this.transformFilter(condition));
+      return { where: andConditions };
     }
 
-    // Handle OR operator  
     if (filter.$or) {
-      return {
-        $or: filter.$or.map((condition: any) => this.transformFilter(condition))
-      };
+      const orConditions = filter.$or.map((condition: any) => this.transformFilter(condition));
+      return { where: orConditions };
     }
 
-    const transformedFilter: any = {};
+    const result: any = {};
 
-    // Handle field conditions
     for (const [field, conditions] of Object.entries(filter)) {
       if (typeof conditions === 'object') {
-        const fieldFilters: any = {};
-
         for (const [operator, value] of Object.entries(conditions as any)) {
           switch (operator) {
             case '$contL':
-              fieldFilters.ilike = `%${value}%`;
+              result[field] = ILike(`%${value}%`);
               break;
             case '$eq':
-              fieldFilters.equals = value;
+              result[field] = value;
               break;
             case '$ne':
-              fieldFilters.not = value;
+              result[field] = Not(value);
               break;
             case '$gt':
-              fieldFilters.gt = value;
+              result[field] = MoreThan(value);
               break;
             case '$gte':
-              fieldFilters.gte = value;
+              result[field] = MoreThanOrEqual(value);
               break;
             case '$lt':
-              fieldFilters.lt = value;
+              result[field] = LessThan(value);
               break;
             case '$lte':
-              fieldFilters.lte = value;
+              result[field] = LessThanOrEqual(value);
               break;
           }
         }
-
-        transformedFilter[field] = fieldFilters;
       } else {
-        transformedFilter[field] = conditions;
+        result[field] = conditions;
       }
     }
 
-    return transformedFilter;
+    return result;
   }
 }
