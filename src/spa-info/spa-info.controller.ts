@@ -1,4 +1,3 @@
-
 import {
   Controller,
   Post,
@@ -58,15 +57,24 @@ export class SpaInfoController {
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('s') s?: string,
   ) {
-    return standardPagination(
-      await this.spaInfoService.findManyWithPagination({
-        page,
-        limit,
-        offset: (page - 1) * limit,
-      }),
-      await this.spaInfoService.standardCount(),
-    );
+    const query = {
+      page,
+      limit,
+      offset: (page - 1) * limit,
+      s
+    };
+
+    const [data, total] = await Promise.all([
+      this.spaInfoService.findManyWithPagination(query),
+      this.spaInfoService.standardCount(),
+    ]);
+
+    return {
+      data,
+      total,
+    };
   }
 
   @Get(':id')

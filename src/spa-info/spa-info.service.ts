@@ -13,7 +13,8 @@ export class SpaInfoService {
   constructor(
     @InjectRepository(SpaInfo)
     private spaInfoRepository: Repository<SpaInfo>,
-     private dataSource: DataSource // Thêm DataSource vào constructor
+    private dataSource: DataSource,
+    private filterService: FilterService
   ) { }
 
   async create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo> {
