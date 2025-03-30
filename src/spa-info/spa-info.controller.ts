@@ -13,6 +13,7 @@ import {
   ParseIntPipe,
   Delete,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { UpdateSpaInfoDto } from './dto/update-spa-info.dto';
 import { standardPagination } from '../utils/standard-pagination';
@@ -80,7 +81,7 @@ export class SpaInfoController {
     return this.spaInfoService.findOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Update spa info' })
   @ApiResponse({
