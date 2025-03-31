@@ -191,7 +191,7 @@ export class SpaInfoService {
       skip: offset,
       take: limit,
       order: {
-        id: 'DESC',
+        name: 'DESC',
       },
       relations: ['banners', 'workingHours'],
     };
