@@ -2,7 +2,7 @@
 import { ILike } from 'typeorm';
 
 export class FilterBuilder {
-  static buildFilter(filterQuery?: string, searchableFields: string[] = []) {
+  static buildFilter(filterQuery?: string) {
     const findOptions: any = {
       where: {}
     };
@@ -13,7 +13,13 @@ export class FilterBuilder {
         if (filters.$and) {
           filters.$and.forEach((andCondition: any) => {
             if (andCondition.$or) {
-              findOptions.where = searchableFields.map(() => ({})); // Create array for OR conditions
+              // Extract searchable fields from the first OR condition
+              const searchableFields = Object.keys(andCondition.$or[0]).filter(key => 
+                typeof andCondition.$or[0][key] === 'object' && '$contL' in andCondition.$or[0][key]
+              );
+              
+              findOptions.where = searchableFields.map(() => ({}));
+              
               andCondition.$or.forEach((condition: any) => {
                 searchableFields.forEach((field, index) => {
                   if (condition[field]?.$contL) {

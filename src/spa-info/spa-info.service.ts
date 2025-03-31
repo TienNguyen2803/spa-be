@@ -186,9 +186,8 @@ export class SpaInfoService {
   
 
   findManyWithPagination({ page, limit, offset }: IPaginationOptions, filterQuery?: string) {
-    const searchableFields = ['name', 'address', 'email'];
     const findOptions = {
-      ...FilterBuilder.buildFilter(filterQuery, searchableFields),
+      ...FilterBuilder.buildFilter(filterQuery),
       skip: offset,
       take: limit,
       order: {
