@@ -175,25 +175,20 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
             if (condition.$and) {
                 return condition.$and.reduce((acc, curr) => {
                     const processed = processCondition(curr);
-                    Object.keys(processed).forEach(key => {
-                        if (acc[key]) {
-                            acc[key] = Object.assign(Object.assign({}, acc[key]), processed[key]);
-                        }
-                        else {
-                            acc[key] = processed[key];
-                        }
-                    });
-                    return acc;
+                    if (Array.isArray(processed)) {
+                        return Object.assign(Object.assign({}, acc), { $or: processed });
+                    }
+                    return Object.assign(Object.assign({}, acc), processed);
                 }, {});
             }
             if (condition.$or) {
-                return [condition.$or.map(processCondition)];
+                return condition.$or.map(processCondition);
             }
             const result = {};
             Object.keys(condition).forEach(key => {
                 const value = condition[key];
                 if (value.$contL) {
-                    result[key] = (0, typeorm_2.ILike)(`%${value.$contL}`);
+                    result[key] = (0, typeorm_2.ILike)(`%${value.$contL}%`);
                 }
                 else if (value.$contR) {
                     result[key] = (0, typeorm_2.ILike)(`${value.$contR}%`);
