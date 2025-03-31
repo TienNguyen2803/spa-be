@@ -185,74 +185,23 @@ export class SpaInfoService {
   
 
   findManyWithPagination({ page, limit, offset }: IPaginationOptions, filterQuery?: string) {
-    const findOptions: any = {
+    const searchableFields = ['name', 'address', 'email'];
+    const findOptions = {
+      ...FilterBuilder.buildFilter(filterQuery, searchableFields),
       skip: offset,
       take: limit,
       order: {
         id: 'DESC',
       },
       relations: ['banners', 'workingHours'],
-      where: {}
     };
-
-    if (filterQuery) {
-      try {
-        const filters = JSON.parse(filterQuery);
-        if (filters.$and) {
-          filters.$and.forEach((andCondition: any) => {
-            if (andCondition.$or) {
-              findOptions.where = [{}, {}, {}]; // Create array for OR conditions
-              andCondition.$or.forEach((condition: any, index: number) => {
-                if (condition.name?.$contL) {
-                  findOptions.where[0] = { name: ILike(`%${condition.name.$contL}%`) };
-                }
-                if (condition.address?.$contL) {
-                  findOptions.where[1] = { address: ILike(`%${condition.address.$contL}%`) };
-                }
-                if (condition.email?.$contL) {
-                  findOptions.where[2] = { email: ILike(`%${condition.email.$contL}%`) };
-                }
-              });
-            }
-          });
-        }
-      } catch (error) {
-        console.error('Error parsing filter query:', error);
-      }
-    }
 
     return this.spaInfoRepository.find(findOptions);
   }
 
   standardCount(filterQuery?: string): Promise<number> {
-    const findOptions: any = { where: {} };
-
-    if (filterQuery) {
-      try {
-        const filters = JSON.parse(filterQuery);
-        if (filters.$and) {
-          filters.$and.forEach((andCondition: any) => {
-            if (andCondition.$or) {
-              findOptions.where = [{}, {}, {}]; // Create array for OR conditions
-              andCondition.$or.forEach((condition: any, index: number) => {
-                if (condition.name?.$contL) {
-                  findOptions.where[0] = { name: ILike(`%${condition.name.$contL}%`) };
-                }
-                if (condition.address?.$contL) {
-                  findOptions.where[1] = { address: ILike(`%${condition.address.$contL}%`) };
-                }
-                if (condition.email?.$contL) {
-                  findOptions.where[2] = { email: ILike(`%${condition.email.$contL}%`) };
-                }
-              });
-            }
-          });
-        }
-      } catch (error) {
-        console.error('Error parsing filter query:', error);
-      }
-    }
-
+    const searchableFields = ['name', 'address', 'email'];
+    const findOptions = FilterBuilder.buildFilter(filterQuery, searchableFields);
     return this.spaInfoRepository.count(findOptions);
   }
 
