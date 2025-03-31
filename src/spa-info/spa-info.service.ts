@@ -191,12 +191,14 @@ export class SpaInfoService {
       skip: offset,
       take: limit,
       relations: ['banners', 'workingHours'],
-      order: {}
+      order: { id: 'DESC' } // Default sort
     };
 
     if (sort) {
       const [field, direction] = sort.split(',');
-      findOptions.order[field] = direction.toUpperCase();
+      if (field && direction) {
+        findOptions.order = { [field]: direction.toUpperCase() };
+      }
     }
 
     return this.spaInfoRepository.find(findOptions);

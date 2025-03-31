@@ -66,7 +66,7 @@ export class SpaInfoController {
         page,
         limit,
         offset: (page - 1) * limit,
-      }, filterQuery),
+      }, filterQuery, sort),
       await this.spaInfoService.standardCount(filterQuery),
     );
   }
