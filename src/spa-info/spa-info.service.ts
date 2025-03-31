@@ -187,11 +187,19 @@ export class SpaInfoService {
 
   findManyWithPagination({ page, limit, offset }: IPaginationOptions, filterQuery?: string, sort?: string) {
     const findOptions = {
-      ...FilterBuilder.buildFilter(filterQuery, sort),
+      ...FilterBuilder.buildFilter(filterQuery),
       skip: offset,
       take: limit,
+      order: {},
       relations: ['banners', 'workingHours'],
     };
+
+    if (sort) {
+      const [field, direction] = sort.split(',');
+      findOptions.order[field] = direction.toUpperCase();
+    } else {
+      findOptions.order['id'] = 'DESC';
+    }
 
     return this.spaInfoRepository.find(findOptions);
   }
