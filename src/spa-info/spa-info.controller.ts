@@ -59,6 +59,7 @@ export class SpaInfoController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('s') filterQuery?: string,
+    @Query('sort[0]') sort?: string,
   ) {
     return standardPagination(
       await this.spaInfoService.findManyWithPagination({
