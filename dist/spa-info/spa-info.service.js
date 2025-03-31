@@ -158,15 +158,13 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
         }
     }
     findManyWithPagination({ page, limit, offset }, filterQuery) {
-        const searchableFields = ['name', 'address', 'email'];
-        const findOptions = Object.assign(Object.assign({}, filter_builder_1.FilterBuilder.buildFilter(filterQuery, searchableFields)), { skip: offset, take: limit, order: {
+        const findOptions = Object.assign(Object.assign({}, filter_builder_1.FilterBuilder.buildFilter(filterQuery)), { skip: offset, take: limit, order: {
                 id: 'DESC',
             }, relations: ['banners', 'workingHours'] });
         return this.spaInfoRepository.find(findOptions);
     }
     standardCount(filterQuery) {
-        const searchableFields = ['name', 'address', 'email'];
-        const findOptions = filter_builder_1.FilterBuilder.buildFilter(filterQuery, searchableFields);
+        const findOptions = filter_builder_1.FilterBuilder.buildFilter(filterQuery);
         return this.spaInfoRepository.count(findOptions);
     }
     findOne(id) {

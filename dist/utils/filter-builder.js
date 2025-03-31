@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FilterBuilder = void 0;
 const typeorm_1 = require("typeorm");
 class FilterBuilder {
-    static buildFilter(filterQuery, searchableFields = []) {
+    static buildFilter(filterQuery) {
         const findOptions = {
             where: {}
         };
@@ -13,6 +13,7 @@ class FilterBuilder {
                 if (filters.$and) {
                     filters.$and.forEach((andCondition) => {
                         if (andCondition.$or) {
+                            const searchableFields = Object.keys(andCondition.$or[0]).filter(key => typeof andCondition.$or[0][key] === 'object' && '$contL' in andCondition.$or[0][key]);
                             findOptions.where = searchableFields.map(() => ({}));
                             andCondition.$or.forEach((condition) => {
                                 searchableFields.forEach((field, index) => {
