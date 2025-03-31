@@ -32,7 +32,7 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
             page,
             limit,
             offset: (page - 1) * limit,
-        }, filterQuery), await this.spaInfoService.standardCount(filterQuery));
+        }, filterQuery, sort), await this.spaInfoService.standardCount(filterQuery));
     }
     findOne(id) {
         return this.spaInfoService.findOne(id);
