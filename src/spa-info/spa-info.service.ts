@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Banner } from 'src/banners/entities/banner.entity';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
 import { WorkingHour } from 'src/working-hours/entities/working-hour.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, ILike } from 'typeorm';
 import { CreateSpaInfoDto } from './dto/create-spa-info.dto';
 import { UpdateSpaInfoDto } from './dto/update-spa-info.dto';
 import { SpaInfo } from './entities/spa-info.entity';
@@ -203,21 +203,32 @@ export class SpaInfoService {
 
     const processCondition = (condition: any) => {
       if (condition.$and) {
-        return { $and: condition.$and.map(processCondition) };
+        return condition.$and.reduce((acc: any, curr: any) => {
+          const processed = processCondition(curr);
+          Object.keys(processed).forEach(key => {
+            if (acc[key]) {
+              acc[key] = { ...acc[key], ...processed[key] };
+            } else {
+              acc[key] = processed[key];
+            }
+          });
+          return acc;
+        }, {});
       }
+      
       if (condition.$or) {
-        return { $or: condition.$or.map(processCondition) };
+        return [condition.$or.map(processCondition)];
       }
 
       const result: any = {};
       Object.keys(condition).forEach(key => {
         const value = condition[key];
         if (value.$contL) {
-          result[key] = { $ilike: `%${value.$contL}` };
+          result[key] = ILike(`%${value.$contL}`);
         } else if (value.$contR) {
-          result[key] = { $ilike: `${value.$contR}%` };
+          result[key] = ILike(`${value.$contR}%`);
         } else if (value.$cont) {
-          result[key] = { $ilike: `%${value.$cont}%` };
+          result[key] = ILike(`%${value.$cont}%`);
         } else {
           result[key] = value;
         }
