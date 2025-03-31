@@ -203,17 +203,15 @@ export class SpaInfoService {
 
     const processCondition = (condition: any) => {
       if (condition.$and) {
-        return condition.$and.reduce((acc: any, curr: any) => {
-          const processed = processCondition(curr);
-          if (Array.isArray(processed)) {
-            return { ...acc, $or: processed };
-          }
-          return { ...acc, ...processed };
-        }, {});
+        const andConditions = condition.$and.map(processCondition);
+        return andConditions.reduce((acc, curr) => ({ ...acc, ...curr }), {});
       }
       
       if (condition.$or) {
-        return condition.$or.map(processCondition);
+        return condition.$or.reduce((acc: any[], curr: any) => {
+          const processed = processCondition(curr);
+          return [...acc, processed];
+        }, []);
       }
 
       const result: any = {};
