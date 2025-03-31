@@ -156,10 +156,8 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
             await queryRunner.release();
         }
     }
-    findManyWithPagination({ page, limit, offset }, filter) {
-        const where = filter ? this.buildFilter(JSON.parse(filter)) : {};
+    findManyWithPagination({ page, limit, offset }) {
         return this.spaInfoRepository.find({
-            where,
             skip: offset,
             take: limit,
             order: {
@@ -167,42 +165,6 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
             },
             relations: ['banners', 'workingHours'],
         });
-    }
-    buildFilter(filter) {
-        if (!filter)
-            return {};
-        const processCondition = (condition) => {
-            if (condition.$and) {
-                return condition.$and.reduce((acc, curr) => {
-                    const processed = processCondition(curr);
-                    if (Array.isArray(processed)) {
-                        return Object.assign(Object.assign({}, acc), { $or: processed });
-                    }
-                    return Object.assign(Object.assign({}, acc), processed);
-                }, {});
-            }
-            if (condition.$or) {
-                return condition.$or.map(processCondition);
-            }
-            const result = {};
-            Object.keys(condition).forEach(key => {
-                const value = condition[key];
-                if (value.$contL) {
-                    result[key] = (0, typeorm_2.ILike)(`%${value.$contL}%`);
-                }
-                else if (value.$contR) {
-                    result[key] = (0, typeorm_2.ILike)(`${value.$contR}%`);
-                }
-                else if (value.$cont) {
-                    result[key] = (0, typeorm_2.ILike)(`%${value.$cont}%`);
-                }
-                else {
-                    result[key] = value;
-                }
-            });
-            return result;
-        };
-        return processCondition(filter);
     }
     standardCount() {
         return this.spaInfoRepository.count();

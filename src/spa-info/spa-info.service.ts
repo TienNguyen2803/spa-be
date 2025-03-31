@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Banner } from 'src/banners/entities/banner.entity';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
 import { WorkingHour } from 'src/working-hours/entities/working-hour.entity';
-import { DataSource, Repository, ILike } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { CreateSpaInfoDto } from './dto/create-spa-info.dto';
 import { UpdateSpaInfoDto } from './dto/update-spa-info.dto';
 import { SpaInfo } from './entities/spa-info.entity';
@@ -184,11 +184,8 @@ export class SpaInfoService {
     }
   
 
-  findManyWithPagination({ page, limit, offset }: IPaginationOptions, filter?: string) {
-    const where = filter ? this.buildFilter(JSON.parse(filter)) : {};
-    
+  findManyWithPagination({ page, limit, offset }: IPaginationOptions) {
     return this.spaInfoRepository.find({
-      where,
       skip: offset,
       take: limit,
       order: {
@@ -196,41 +193,6 @@ export class SpaInfoService {
       },
       relations: ['banners', 'workingHours'],
     });
-  }
-
-  private buildFilter(filter: any) {
-    if (!filter) return {};
-
-    const processCondition = (condition: any) => {
-      if (condition.$and) {
-        const andConditions = condition.$and.map(processCondition);
-        return andConditions.reduce((acc, curr) => ({ ...acc, ...curr }), {});
-      }
-      
-      if (condition.$or) {
-        return condition.$or.reduce((acc: any[], curr: any) => {
-          const processed = processCondition(curr);
-          return [...acc, processed];
-        }, []);
-      }
-
-      const result: any = {};
-      Object.keys(condition).forEach(key => {
-        const value = condition[key];
-        if (value.$contL) {
-          result[key] = ILike(`%${value.$contL}%`);
-        } else if (value.$contR) {
-          result[key] = ILike(`${value.$contR}%`);
-        } else if (value.$cont) {
-          result[key] = ILike(`%${value.$cont}%`);
-        } else {
-          result[key] = value;
-        }
-      });
-      return result;
-    };
-
-    return processCondition(filter);
   }
 
   standardCount(): Promise<number> {
