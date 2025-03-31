@@ -184,8 +184,11 @@ export class SpaInfoService {
     }
   
 
-  findManyWithPagination({ page, limit, offset }: IPaginationOptions) {
+  findManyWithPagination({ page, limit, offset }: IPaginationOptions, filter?: string) {
+    const where = filter ? this.buildFilter(JSON.parse(filter)) : {};
+    
     return this.spaInfoRepository.find({
+      where,
       skip: offset,
       take: limit,
       order: {
@@ -193,6 +196,36 @@ export class SpaInfoService {
       },
       relations: ['banners', 'workingHours'],
     });
+  }
+
+  private buildFilter(filter: any) {
+    if (!filter) return {};
+
+    const processCondition = (condition: any) => {
+      if (condition.$and) {
+        return { $and: condition.$and.map(processCondition) };
+      }
+      if (condition.$or) {
+        return { $or: condition.$or.map(processCondition) };
+      }
+
+      const result: any = {};
+      Object.keys(condition).forEach(key => {
+        const value = condition[key];
+        if (value.$contL) {
+          result[key] = { $ilike: `%${value.$contL}` };
+        } else if (value.$contR) {
+          result[key] = { $ilike: `${value.$contR}%` };
+        } else if (value.$cont) {
+          result[key] = { $ilike: `%${value.$cont}%` };
+        } else {
+          result[key] = value;
+        }
+      });
+      return result;
+    };
+
+    return processCondition(filter);
   }
 
   standardCount(): Promise<number> {
