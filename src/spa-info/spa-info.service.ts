@@ -205,26 +205,22 @@ export class SpaInfoService {
       if (condition.$and) {
         return condition.$and.reduce((acc: any, curr: any) => {
           const processed = processCondition(curr);
-          Object.keys(processed).forEach(key => {
-            if (acc[key]) {
-              acc[key] = { ...acc[key], ...processed[key] };
-            } else {
-              acc[key] = processed[key];
-            }
-          });
-          return acc;
+          if (Array.isArray(processed)) {
+            return { ...acc, $or: processed };
+          }
+          return { ...acc, ...processed };
         }, {});
       }
       
       if (condition.$or) {
-        return [condition.$or.map(processCondition)];
+        return condition.$or.map(processCondition);
       }
 
       const result: any = {};
       Object.keys(condition).forEach(key => {
         const value = condition[key];
         if (value.$contL) {
-          result[key] = ILike(`%${value.$contL}`);
+          result[key] = ILike(`%${value.$contL}%`);
         } else if (value.$contR) {
           result[key] = ILike(`${value.$contR}%`);
         } else if (value.$cont) {
