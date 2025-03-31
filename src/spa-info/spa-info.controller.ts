@@ -59,7 +59,7 @@ export class SpaInfoController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('s') filterQuery?: string,
-    @Query('sort[0]') sort?: string,
+    @Query('sort') sort?: string,
   ) {
     console.log('Received sort parameter:', sort);
     return standardPagination(
