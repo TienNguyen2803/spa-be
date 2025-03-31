@@ -61,6 +61,7 @@ export class SpaInfoController {
     @Query('s') filterQuery?: string,
     @Query('sort[0]') sort?: string,
   ) {
+    console.log('Received sort parameter:', sort);
     return standardPagination(
       await this.spaInfoService.findManyWithPagination({
         page,

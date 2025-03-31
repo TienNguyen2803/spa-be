@@ -185,22 +185,28 @@ export class SpaInfoService {
   }
 
 
-  findManyWithPagination({ page, limit, offset }: IPaginationOptions, filterQuery?: string, sort?: string) {
+  async findManyWithPagination({ page, limit, offset }: IPaginationOptions, filterQuery?: string, sort?: string) {
     const findOptions = {
       ...FilterBuilder.buildFilter(filterQuery),
       skip: offset,
       take: limit,
       relations: ['banners', 'workingHours'],
-      order: { id: 'DESC' } // Default sort
+      order: {}
     };
 
     if (sort) {
       const [field, direction] = sort.split(',');
       if (field && direction) {
-        findOptions.order = { [field]: direction.toUpperCase() };
+        const upperDirection = direction.toUpperCase();
+        if (upperDirection === 'ASC' || upperDirection === 'DESC') {
+          findOptions.order = { [field]: upperDirection };
+        }
       }
+    } else {
+      findOptions.order = { id: 'DESC' };
     }
 
+    console.log('Sort options:', findOptions.order);
     return this.spaInfoRepository.find(findOptions);
   }
 
