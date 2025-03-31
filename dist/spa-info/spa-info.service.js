@@ -157,10 +157,12 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
             await queryRunner.release();
         }
     }
-    findManyWithPagination({ page, limit, offset }, filterQuery) {
-        const findOptions = Object.assign(Object.assign({}, filter_builder_1.FilterBuilder.buildFilter(filterQuery)), { skip: offset, take: limit, order: {
-                name: 'DESC',
-            }, relations: ['banners', 'workingHours'] });
+    findManyWithPagination({ page, limit, offset }, filterQuery, sort) {
+        const findOptions = Object.assign(Object.assign({}, filter_builder_1.FilterBuilder.buildFilter(filterQuery)), { skip: offset, take: limit, relations: ['banners', 'workingHours'], order: {} });
+        if (sort) {
+            const [field, direction] = sort.split(',');
+            findOptions.order[field] = direction.toUpperCase();
+        }
         return this.spaInfoRepository.find(findOptions);
     }
     standardCount(filterQuery) {
