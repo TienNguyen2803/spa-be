@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Banner } from 'src/banners/entities/banner.entity';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
 import { WorkingHour } from 'src/working-hours/entities/working-hour.entity';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, ILike } from 'typeorm';
 import { CreateSpaInfoDto } from './dto/create-spa-info.dto';
 import { UpdateSpaInfoDto } from './dto/update-spa-info.dto';
 import { SpaInfo } from './entities/spa-info.entity';
@@ -184,19 +184,76 @@ export class SpaInfoService {
     }
   
 
-  findManyWithPagination({ page, limit, offset }: IPaginationOptions) {
-    return this.spaInfoRepository.find({
+  findManyWithPagination({ page, limit, offset }: IPaginationOptions, filterQuery?: string) {
+    const findOptions: any = {
       skip: offset,
       take: limit,
       order: {
         id: 'DESC',
       },
       relations: ['banners', 'workingHours'],
-    });
+      where: {}
+    };
+
+    if (filterQuery) {
+      try {
+        const filters = JSON.parse(filterQuery);
+        if (filters.$and) {
+          filters.$and.forEach((andCondition: any) => {
+            if (andCondition.$or) {
+              findOptions.where = [{}, {}, {}]; // Create array for OR conditions
+              andCondition.$or.forEach((condition: any, index: number) => {
+                if (condition.name?.$contL) {
+                  findOptions.where[0] = { name: ILike(`%${condition.name.$contL}%`) };
+                }
+                if (condition.address?.$contL) {
+                  findOptions.where[1] = { address: ILike(`%${condition.address.$contL}%`) };
+                }
+                if (condition.email?.$contL) {
+                  findOptions.where[2] = { email: ILike(`%${condition.email.$contL}%`) };
+                }
+              });
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error parsing filter query:', error);
+      }
+    }
+
+    return this.spaInfoRepository.find(findOptions);
   }
 
-  standardCount(): Promise<number> {
-    return this.spaInfoRepository.count();
+  standardCount(filterQuery?: string): Promise<number> {
+    const findOptions: any = { where: {} };
+
+    if (filterQuery) {
+      try {
+        const filters = JSON.parse(filterQuery);
+        if (filters.$and) {
+          filters.$and.forEach((andCondition: any) => {
+            if (andCondition.$or) {
+              findOptions.where = [{}, {}, {}]; // Create array for OR conditions
+              andCondition.$or.forEach((condition: any, index: number) => {
+                if (condition.name?.$contL) {
+                  findOptions.where[0] = { name: ILike(`%${condition.name.$contL}%`) };
+                }
+                if (condition.address?.$contL) {
+                  findOptions.where[1] = { address: ILike(`%${condition.address.$contL}%`) };
+                }
+                if (condition.email?.$contL) {
+                  findOptions.where[2] = { email: ILike(`%${condition.email.$contL}%`) };
+                }
+              });
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error parsing filter query:', error);
+      }
+    }
+
+    return this.spaInfoRepository.count(findOptions);
   }
 
   findOne(id: number): Promise<SpaInfo> {

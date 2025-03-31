@@ -58,14 +58,15 @@ export class SpaInfoController {
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('s') filterQuery?: string,
   ) {
     return standardPagination(
       await this.spaInfoService.findManyWithPagination({
         page,
         limit,
         offset: (page - 1) * limit,
-      }),
-      await this.spaInfoService.standardCount(),
+      }, filterQuery),
+      await this.spaInfoService.standardCount(filterQuery),
     );
   }
 
