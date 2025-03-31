@@ -156,18 +156,75 @@ let SpaInfoService = exports.SpaInfoService = class SpaInfoService {
             await queryRunner.release();
         }
     }
-    findManyWithPagination({ page, limit, offset }) {
-        return this.spaInfoRepository.find({
+    findManyWithPagination({ page, limit, offset }, filterQuery) {
+        const findOptions = {
             skip: offset,
             take: limit,
             order: {
                 id: 'DESC',
             },
             relations: ['banners', 'workingHours'],
-        });
+            where: {}
+        };
+        if (filterQuery) {
+            try {
+                const filters = JSON.parse(filterQuery);
+                if (filters.$and) {
+                    filters.$and.forEach((andCondition) => {
+                        if (andCondition.$or) {
+                            findOptions.where = [{}, {}, {}];
+                            andCondition.$or.forEach((condition, index) => {
+                                var _a, _b, _c;
+                                if ((_a = condition.name) === null || _a === void 0 ? void 0 : _a.$contL) {
+                                    findOptions.where[0] = { name: (0, typeorm_2.ILike)(`%${condition.name.$contL}%`) };
+                                }
+                                if ((_b = condition.address) === null || _b === void 0 ? void 0 : _b.$contL) {
+                                    findOptions.where[1] = { address: (0, typeorm_2.ILike)(`%${condition.address.$contL}%`) };
+                                }
+                                if ((_c = condition.email) === null || _c === void 0 ? void 0 : _c.$contL) {
+                                    findOptions.where[2] = { email: (0, typeorm_2.ILike)(`%${condition.email.$contL}%`) };
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+            catch (error) {
+                console.error('Error parsing filter query:', error);
+            }
+        }
+        return this.spaInfoRepository.find(findOptions);
     }
-    standardCount() {
-        return this.spaInfoRepository.count();
+    standardCount(filterQuery) {
+        const findOptions = { where: {} };
+        if (filterQuery) {
+            try {
+                const filters = JSON.parse(filterQuery);
+                if (filters.$and) {
+                    filters.$and.forEach((andCondition) => {
+                        if (andCondition.$or) {
+                            findOptions.where = [{}, {}, {}];
+                            andCondition.$or.forEach((condition, index) => {
+                                var _a, _b, _c;
+                                if ((_a = condition.name) === null || _a === void 0 ? void 0 : _a.$contL) {
+                                    findOptions.where[0] = { name: (0, typeorm_2.ILike)(`%${condition.name.$contL}%`) };
+                                }
+                                if ((_b = condition.address) === null || _b === void 0 ? void 0 : _b.$contL) {
+                                    findOptions.where[1] = { address: (0, typeorm_2.ILike)(`%${condition.address.$contL}%`) };
+                                }
+                                if ((_c = condition.email) === null || _c === void 0 ? void 0 : _c.$contL) {
+                                    findOptions.where[2] = { email: (0, typeorm_2.ILike)(`%${condition.email.$contL}%`) };
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+            catch (error) {
+                console.error('Error parsing filter query:', error);
+            }
+        }
+        return this.spaInfoRepository.count(findOptions);
     }
     findOne(id) {
         return this.spaInfoRepository.findOneOrFail({
