@@ -9,7 +9,7 @@ export declare class SpaInfoService {
     constructor(spaInfoRepository: Repository<SpaInfo>, dataSource: DataSource);
     create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo>;
     update(id: number, updateSpaInfoDto: UpdateSpaInfoDto): Promise<SpaInfo>;
-    findManyWithPagination({ page, limit, offset }: IPaginationOptions, filterQuery?: string, sort?: string): Promise<SpaInfo[]>;
+    findManyWithPagination({ page, limit, offset }: IPaginationOptions, filterQuery?: string): Promise<SpaInfo[]>;
     standardCount(filterQuery?: string): Promise<number>;
     findOne(id: number): Promise<SpaInfo>;
     softDelete(id: number): Promise<void>;

@@ -27,12 +27,12 @@ let SpaInfoController = exports.SpaInfoController = class SpaInfoController {
     create(createSpaInfoDto) {
         return this.spaInfoService.create(createSpaInfoDto);
     }
-    async findAll(page, limit, filterQuery, sort) {
+    async findAll(page, limit, filterQuery) {
         return (0, standard_pagination_1.standardPagination)(await this.spaInfoService.findManyWithPagination({
             page,
             limit,
             offset: (page - 1) * limit,
-        }, filterQuery, sort), await this.spaInfoService.standardCount(filterQuery));
+        }, filterQuery), await this.spaInfoService.standardCount(filterQuery));
     }
     findOne(id) {
         return this.spaInfoService.findOne(id);
@@ -70,9 +70,8 @@ __decorate([
     __param(0, (0, common_1.Query)('page', new common_1.DefaultValuePipe(1), common_1.ParseIntPipe)),
     __param(1, (0, common_1.Query)('limit', new common_1.DefaultValuePipe(10), common_1.ParseIntPipe)),
     __param(2, (0, common_1.Query)('s')),
-    __param(3, (0, common_1.Query)('sort[0]')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, String, String]),
+    __metadata("design:paramtypes", [Number, Number, String]),
     __metadata("design:returntype", Promise)
 ], SpaInfoController.prototype, "findAll", null);
 __decorate([
