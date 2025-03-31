@@ -6,7 +6,7 @@ export declare class SpaInfoController {
     private readonly spaInfoService;
     constructor(spaInfoService: SpaInfoService);
     create(createSpaInfoDto: CreateSpaInfoDto): Promise<SpaInfo>;
-    findAll(page: number, limit: number): Promise<Readonly<{
+    findAll(page: number, limit: number, filter?: string): Promise<Readonly<{
         data: SpaInfo[];
         total: number;
     }>>;
