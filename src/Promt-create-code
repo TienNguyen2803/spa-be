@@ -3,4 +3,17 @@
 Tôi cần tạo 2 entity giống như hình minh họa, trong đó các trường (field) đều có thể để trống (null). Vui lòng tham khảo cấu trúc của entity spa-info.
 Quan hệ ManyToOne Cần thêm JoinColumn.
 
-2/ 
+2/ Tạo CRUD 
+
+Hãy tham khảo folder spa-info, tạo các API sau cho service category:
+
+findAll: Lấy danh sách tất cả các mục.
+create: Tạo mới một mục.
+update: Cập nhật thông tin một mục.
+findOne: Lấy thông tin chi tiết của một mục.
+remove: Xóa một mục.
+Chú ý:
+
+DTO cần có đầy đủ các Decorator để đảm bảo tính hợp lệ dữ liệu.
+Đảm bảo các API tuân thủ chuẩn RESTful và xử lý lỗi một cách hợp lý.
+Kiểm tra kỹ logic trước khi triển khai. 
