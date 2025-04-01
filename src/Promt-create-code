@@ -1,0 +1,6 @@
+1/ Create Entity
+
+Tôi cần tạo 2 entity giống như hình minh họa, trong đó các trường (field) đều có thể để trống (null). Vui lòng tham khảo cấu trúc của entity spa-info.
+Quan hệ ManyToOne Cần thêm JoinColumn.
+
+2/ 

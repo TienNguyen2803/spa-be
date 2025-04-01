@@ -1,5 +1,5 @@
 
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { EntityHelper } from '../../utils/entity-helper';
 import { ServiceCategory } from '../../service-categories/entities/service-category.entity';
 
@@ -39,5 +39,9 @@ export class Service extends EntityHelper {
   updated_at: Date;
 
   @ManyToOne(() => ServiceCategory, (category) => category.services)
-  category: ServiceCategory;
+  @JoinColumn({ name: 'service_category_id' })
+  service_category: Service;
+
+  @Column()
+  service_category_id: number;
 }

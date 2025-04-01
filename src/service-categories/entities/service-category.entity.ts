@@ -23,7 +23,7 @@ export class ServiceCategory extends EntityHelper {
   @Column({ nullable: true, default: true })
   is_active: boolean;
 
-  @OneToMany(() => Service, (service) => service.category, {
+  @OneToMany(() => Service, (service) => service.service_category, {
     cascade: true,
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
