@@ -22,6 +22,7 @@ import { AllConfigType } from './config/config.type';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
 import { SpaInfoModule } from './spa-info/spa-info.module';
+import { ServiceCategoriesModule } from './service-categories/service-categories.module';
 import { ClsModule } from 'nestjs-cls';
 import { EntityHelperSubscriber } from './utils/subcribers/entity-helper.subscriber';
 
@@ -82,6 +83,7 @@ import { EntityHelperSubscriber } from './utils/subcribers/entity-helper.subscri
     MailerModule,
     HomeModule,
     SpaInfoModule,
+    ServiceCategoriesModule,
   ],
 })
 export class AppModule { }
