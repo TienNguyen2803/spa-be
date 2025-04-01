@@ -13,7 +13,7 @@ export class ServiceCategoriesService {
   constructor(
     @InjectRepository(ServiceCategory)
     private serviceCategoryRepository: Repository<ServiceCategory>,
-  ) {}
+  ) { }
 
   async create(createServiceCategoryDto: CreateServiceCategoryDto): Promise<ServiceCategory> {
     const serviceCategory = this.serviceCategoryRepository.create(createServiceCategoryDto);
@@ -25,6 +25,7 @@ export class ServiceCategoriesService {
     filterQuery?: string,
     sort?: string,
   ) {
+    console.log(filterQuery)
     const findOptions = {
       ...FilterBuilder.buildFilter(filterQuery),
       skip: offset,

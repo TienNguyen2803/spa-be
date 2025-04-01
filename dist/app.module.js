@@ -34,6 +34,7 @@ const session_module_1 = require("./session/session.module");
 const mailer_module_1 = require("./mailer/mailer.module");
 const spa_info_module_1 = require("./spa-info/spa-info.module");
 const service_categories_module_1 = require("./service-categories/service-categories.module");
+const services_module_1 = require("./services/services.module");
 const nestjs_cls_1 = require("nestjs-cls");
 const entity_helper_subscriber_1 = require("./utils/subcribers/entity-helper.subscriber");
 let AppModule = exports.AppModule = class AppModule {
@@ -97,6 +98,7 @@ exports.AppModule = AppModule = __decorate([
             home_module_1.HomeModule,
             spa_info_module_1.SpaInfoModule,
             service_categories_module_1.ServiceCategoriesModule,
+            services_module_1.ServicesModule,
         ],
     })
 ], AppModule);
